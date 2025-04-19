@@ -31,7 +31,7 @@
 ###module load cuda11/11.0
 
 ### set directory for job execution, replace the following path with your own path
-hw_path=~kylerm23/ece569/build_dir
+hw_path=~matthewt1441/ece569/build_dir
 
 cd $hw_path
 
@@ -65,7 +65,7 @@ do
         for block_dim in ${DIM[@]}
         do
             file=share_bic_$((GAME_COUNT))_$((scale))_$((block_dim)).txt
-            ./Histogram_Solution $scale $block_dim $game -t vector > Kernel_Testing/$file
+            ./FusionImage_Solution $scale $block_dim $game -t vector > Kernel_Testing/$file
         done
     done
     GAME_COUNT=$((GAME_COUNT+1))

@@ -1,0 +1,9 @@
+./NV/image1.ppmBICUBIC Test
+Block Dimensions, 1, Scale Factor, 2
+Input Image Dimensions, 1920 , 1080
+Output Image Dimensions, 3840, 2160
+BIC SHARED MEM, 0, 11.863296, ms
+BIC SHARED MEM, 1, 11.924544, ms
+BIC SHARED MEM, 2, 11.857728, ms
+BIC SHARED MEM, 3, 11.858464, ms
+BIC SHARED MEM, 4, 11.856800, ms

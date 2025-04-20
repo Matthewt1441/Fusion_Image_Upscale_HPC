@@ -201,9 +201,9 @@ int main(int argc, char* argv[])
         //Artifact_Grey_Kernel                                    <<< Arti_Grid, Arti_Block >>>                               (d_big_artifact_map         , d_big_img_nn_grey             , d_big_img_bic_grey        , big_width, big_height);
         
         //******************************* Run & Time Kernels ********************************//
+        #define ITERATIONS 5
         printf("Guassian Blur Test\nScale Factor, %d\nInput Image Dimensions, %d , %d\nOutput Image Dimensions, %d, %d\n", scale, width, height, big_width, big_height);
-   
-        printf("Block_Y, Block_X, Version, ")
+        printf("Block_Y, Block_X, Version, ");
         for(int i = 0; i<ITERATIONS; i++)
         {
             printf("Iteration %d, ", i+1);
@@ -222,7 +222,6 @@ int main(int argc, char* argv[])
                 dim3 Gaus_Naive_Grid(((big_width - 1) / Gaus_Naive_Block.x) + 1, ((big_height - 1) / Gaus_Naive_Block.y) + 1); 
 
                 //printf("Guassian Blur Test\nBlock Dimensions, %d x %d, Scale Factor, %d\nInput Image Dimensions, %d , %d\nOutput Image Dimensions, %d, %d\n", block_dim_x, block_dim_y, scale, width, height, big_width, big_height);
-                #define ITERATIONS 5
                 double Serial_Time[ITERATIONS] = {0};
                 double Naive_Time[ITERATIONS] = {0};
                 double Horizontal_Seperable_Time[ITERATIONS] = {0};
@@ -353,7 +352,7 @@ int main(int argc, char* argv[])
                 printf("%f\n", Average_Time/ITERATIONS);
 
                 Average_Time = 0;
-                printf("%d, %d, Horizontal Seperable, "y, x);
+                printf("%d, %d, Horizontal Seperable, ",y, x);
                 for(int i = 0; i<ITERATIONS; i++)
                 {
                     Average_Time += Horizontal_Seperable_Time[i];
@@ -362,7 +361,7 @@ int main(int argc, char* argv[])
                 printf("%f\n", Average_Time/ITERATIONS);
 
                 Average_Time = 0;
-                printf("%d, %d, Vertical Seperable, "y, x);
+                printf("%d, %d, Vertical Seperable, ",y, x);
                 for(int i = 0; i<ITERATIONS; i++)
                 {
                     Average_Time += Vertical_Seperable_Time[i];

@@ -198,8 +198,13 @@ int main(int argc, char* argv[])
         
         //******************************* Run & Time Kernels ********************************//
         printf("Guassian Blur Test\nBlock Dimensions, %d x %d, Scale Factor, %d\nInput Image Dimensions, %d , %d\nOutput Image Dimensions, %d, %d\n", block_dim_x, block_dim_y, scale, width, height, big_width, big_height);
-
-        for (int i = 0; i < 5; i ++)
+        #DEFINE ITERATIONS 5
+        double Serial_Time[ITERATIONS] = {0};
+        double Naive_Time[ITERATIONS] = {0};
+        double Horizontal_Seperable_Time[ITERATIONS] = {0};
+        double Vertical_Seperable_Time[ITERATIONS] = {0};
+        double Average_Time = 0;
+        for (int i = 0; i < ITERATIONS; i ++)
         {
             ////////////TIME GUASSIAN WITH SERIAL CODE IMPLEMENTATION/////////////////////
             auto start = std::chrono::high_resolution_clock::now();
@@ -209,12 +214,12 @@ int main(int argc, char* argv[])
 
             auto end = std::chrono::high_resolution_clock::now();
             auto dur = end - start;
-            processing_time = std::chrono::duration_cast<std::chrono::microseconds>(dur).count();
+            Serial_Time[i] = std::chrono::duration_cast<std::chrono::microseconds>(dur).count();
 
-            printf("GUAS SERIAL CODE, %f, ms\n", processing_time/1000);
+            //printf("GUAS SERIAL CODE, %f, ms\n", processing_time/1000);
 
             //WRITE THE PICTURES FOR COMPARISON
-            if(i == 4)
+            if(i == ITERATIONS-1)
             {
                 Map2Greyscale(h_big_img_BLURRED_ARTIFACT_grey   , h_blurred_artifact_map, big_width, big_height, 255);   //Artifact values should be between 0-255;
                 writePPMGrey("./GUAS_TEST/GUAS_SERIAL.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
@@ -238,10 +243,11 @@ int main(int argc, char* argv[])
 
             cudaEventSynchronize(astopEvent1);
             cudaEventElapsedTime(&aelapsedTime1, astartEvent1, astopEvent1);
-            printf("GUASSIAN NAIVE, %f, ms\n", aelapsedTime1);
+            Naive_Time[i] = aelapsedTime1;
+            //printf("GUASSIAN NAIVE, %f, ms\n", aelapsedTime1);
 
             //WRITE THE PICTURES FOR COMPARISON
-            if(i == 4)
+            if(i == ITERATIONS-1)
             {            
                 //COPY OVER IMAGE DATA
                 cudaMemcpy(h_blurred_artifact_map   , d_big_blurred_artifact_map, sizeof(float) * big_width * big_height    , cudaMemcpyDeviceToHost);
@@ -272,14 +278,16 @@ int main(int argc, char* argv[])
 
             cudaEventSynchronize(astopEvent1);
             cudaEventElapsedTime(&aelapsedTime1, astartEvent1, astopEvent1);
-            printf("GUASSIAN HORIZONTAL SEPERABLE, %f, ms\n", aelapsedTime1);
+            Horizontal_Seperable_Time[i] = aelapsedTime1;
+            //printf("GUASSIAN HORIZONTAL SEPERABLE, %f, ms\n", aelapsedTime1);
     
             cudaEventSynchronize(astopEvent2);
             cudaEventElapsedTime(&aelapsedTime2, astartEvent2, astopEvent2);
-            printf("GUASSIAN VERTICAL SEPERABLE, %f, ms\n", aelapsedTime2);
+            Vertical_Seperable_Time[i] = aelapsedTime2;
+            //printf("GUASSIAN VERTICAL SEPERABLE, %f, ms\n", aelapsedTime2);
 
             //WRITE THE PICTURES FOR COMPARISON
-            if(i == 4)
+            if(i == ITERATIONS-1)
             {            
                 //COPY OVER IMAGE DATA
                 cudaMemcpy(h_blurred_artifact_map   , d_big_blurred_artifact_map, sizeof(float) * big_width * big_height    , cudaMemcpyDeviceToHost);
@@ -290,6 +298,49 @@ int main(int argc, char* argv[])
             ////////////TIME GUASSIAN WITH SEPERABLE CUDA IMPLEMENTATION/////////////////////
 
         }
+
+        printf("Version, ");
+        for(int i = 0; i<ITERATIONS; i++)
+        {
+            printf("Iteration %d, ", i);
+        }
+        printf("Average\n")
+
+        Average_Time = 0;
+        printf("Serial, ");
+        for(int i = 0; i<ITERATIONS; i++)
+        {
+            Average_Time += Serial_Time[i];
+            printf("%f, ", Serial_Time[i]);
+        }
+        printf("%f\n", Average_Time/ITERATIONS);
+
+        Average_Time = 0;
+        printf("Naive, ");
+        for(int i = 0; i<ITERATIONS; i++)
+        {
+            Average_Time += Naive_Time[i];
+            printf("%f, ", Naive_Time[i]);
+        }
+        printf("%f\n", Average_Time/ITERATIONS);
+
+        Average_Time = 0;
+        printf("Horizontal Seperable, ");
+        for(int i = 0; i<ITERATIONS; i++)
+        {
+            Average_Time += Horizontal_Seperable_Time[i];
+            printf("%f, ", Horizontal_Seperable_Time[i]);
+        }
+        printf("%f\n", Average_Time/ITERATIONS);
+
+        Average_Time = 0;
+        printf("Vertical Seperable, ");
+        for(int i = 0; i<ITERATIONS; i++)
+        {
+            Average_Time += Vertical_Seperable_Time[i];
+            printf("%f, ", Vertical_Seperable_Time[i]);
+        }
+        printf("%f\n", Average_Time/ITERATIONS);
 
         //************************* CLEAN UP *****************************//
         // 

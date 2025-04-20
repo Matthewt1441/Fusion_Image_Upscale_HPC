@@ -31,7 +31,7 @@
 ###module load cuda11/11.0
 
 ### set directory for job execution, replace the following path with your own path
-hw_path=~matthewt1441/ece569/build_dir
+hw_path=~matthewt1441/ece569/Fusion_Image_Upscale/build_dir
 
 cd $hw_path
 

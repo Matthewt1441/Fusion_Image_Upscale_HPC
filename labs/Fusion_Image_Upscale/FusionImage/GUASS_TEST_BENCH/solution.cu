@@ -198,7 +198,7 @@ int main(int argc, char* argv[])
         
         //******************************* Run & Time Kernels ********************************//
         printf("Guassian Blur Test\nBlock Dimensions, %d x %d, Scale Factor, %d\nInput Image Dimensions, %d , %d\nOutput Image Dimensions, %d, %d\n", block_dim_x, block_dim_y, scale, width, height, big_width, big_height);
-        #DEFINE ITERATIONS 5
+        #define ITERATIONS 5
         double Serial_Time[ITERATIONS] = {0};
         double Naive_Time[ITERATIONS] = {0};
         double Horizontal_Seperable_Time[ITERATIONS] = {0};
@@ -304,7 +304,7 @@ int main(int argc, char* argv[])
         {
             printf("Iteration %d, ", i);
         }
-        printf("Average\n")
+        printf("Average\n");
 
         Average_Time = 0;
         printf("Serial, ");

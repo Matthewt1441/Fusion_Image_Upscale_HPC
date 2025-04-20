@@ -190,8 +190,8 @@ int main(int argc, char* argv[])
         //CUDA Code Up until Guass
         nearestNeighbors_GreyCon_Kernel_RGBA                    <<< NN_Grid, NN_Block >>>                                   (d_big_img_nn, d_big_img_nn_grey, d_RGBA_img, big_width, big_height, width, height, scale);
         bicubicInterpolation_Shared_Memory_GreyCon_Kernel_RGBA  <<< BiCubic_Grid, BiCubic_Block, BiCubic_Shared_Mem_Size >>>(d_big_img_bic, d_big_img_bic_grey, d_RGBA_img, big_width, big_height, width, height, scale);
-        //Artifact_Shared_Memory_Kernel                           <<< Arti_Grid, Arti_Block, Arti_Shared_Mem_Size >>>         (d_big_artifact_map, d_big_img_nn_grey, d_big_img_bic_grey, big_width, big_height);
-        Artifact_Grey_Kernel                                    <<< Arti_Grid, Arti_Block >>>                               (d_big_artifact_map         , d_big_img_nn_grey             , d_big_img_bic_grey        , big_width, big_height);
+        Artifact_Shared_Memory_Kernel                           <<< Arti_Grid, Arti_Block, Arti_Shared_Mem_Size >>>         (d_big_artifact_map, d_big_img_nn_grey, d_big_img_bic_grey, big_width, big_height);
+        //Artifact_Grey_Kernel                                    <<< Arti_Grid, Arti_Block >>>                               (d_big_artifact_map         , d_big_img_nn_grey             , d_big_img_bic_grey        , big_width, big_height);
         
         //******************************* Run & Time Kernels ********************************//
         printf("Guassian Blur Test\nBlock Dimensions, %d x %d, Scale Factor, %d\nInput Image Dimensions, %d , %d\nOutput Image Dimensions, %d, %d\n", block_dim_x, block_dim_y, scale, width, height, big_width, big_height);
@@ -243,7 +243,7 @@ int main(int argc, char* argv[])
                 //COPY OVER IMAGE DATA
                 cudaMemcpy(h_blurred_artifact_map   , d_big_blurred_artifact_map, sizeof(float) * big_width * big_height    , cudaMemcpyDeviceToHost);
                 Map2Greyscale(h_big_img_BLURRED_ARTIFACT_grey   , h_blurred_artifact_map, big_width, big_height, 255);   //Artifact values should be between 0-255;
-                writePPMGrey("./GUAS_TEST/GUAS_NAIVE.ppm", (char*)h_blurred_artifact_map, big_width, big_height);
+                writePPMGrey("./GUAS_TEST/GUAS_NAIVE.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
                 cudaDeviceSynchronize();
             }
             ////////////TIME GUASSIAN NAIVE CUDA IMPLEMENTATION/////////////////////
@@ -281,7 +281,7 @@ int main(int argc, char* argv[])
                 //COPY OVER IMAGE DATA
                 cudaMemcpy(h_blurred_artifact_map   , d_big_blurred_artifact_map, sizeof(float) * big_width * big_height    , cudaMemcpyDeviceToHost);
                 Map2Greyscale(h_big_img_BLURRED_ARTIFACT_grey   , h_blurred_artifact_map, big_width, big_height, 255);   //Artifact values should be between 0-255;
-                writePPMGrey("./GUAS_TEST/GUAS_SEPERABLE_CONVOLVE.ppm", (char*)h_blurred_artifact_map, big_width, big_height);
+                writePPMGrey("./GUAS_TEST/GUAS_SEPERABLE_CONVOLVE.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
                 cudaDeviceSynchronize();
             }
             ////////////TIME GUASSIAN WITH SEPERABLE CUDA IMPLEMENTATION/////////////////////

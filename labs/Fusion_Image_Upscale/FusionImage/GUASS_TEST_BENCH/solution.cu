@@ -14,7 +14,7 @@
 int main(int argc, char* argv[])
 {
 
-    int scale = atoi(argv[1]); int block_dim_x = atoi(argv[2]); int block_dim_y = atoi(argv[3]);
+    int scale = atoi(argv[1]); int block_dim_y = atoi(argv[2]); int block_dim_x = atoi(argv[3]);
     int width;
     int height;
 
@@ -158,6 +158,10 @@ int main(int argc, char* argv[])
         dim3 h_Guas_Grid(((big_width - 1) / h_Guas_Block.x) + 1, ((big_height - 1) / h_Guas_Block.y) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
         dim3 v_Guas_Block(block_dim_x, block_dim_y);
         dim3 v_Guas_Grid(((big_width - 1) / v_Guas_Block.x) + 1, ((big_height - 1) / v_Guas_Block.y) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
+        dim3 Gaus_Naive_Block(block_dim_x, block_dim_y);
+        dim3 Gaus_Naive_Grid(((big_width - 1) / Gaus_Naive_Block.x) + 1, ((big_height - 1) / Gaus_Naive_Block.y) + 1); 
+
+
 
         cudaError_t error;
         //**************** Setup Kernel ****************//
@@ -219,17 +223,17 @@ int main(int argc, char* argv[])
             //printf("GUAS SERIAL CODE, %f, ms\n", processing_time/1000);
 
             //WRITE THE PICTURES FOR COMPARISON
-            if(i == ITERATIONS-1)
-            {
-                Map2Greyscale(h_big_img_BLURRED_ARTIFACT_grey   , h_blurred_artifact_map, big_width, big_height, 255);   //Artifact values should be between 0-255;
-                writePPMGrey("./GUAS_TEST/GUAS_SERIAL.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
-                cudaDeviceSynchronize();
-            }
+            // if(i == ITERATIONS-1)
+            // {
+            //     Map2Greyscale(h_big_img_BLURRED_ARTIFACT_grey   , h_blurred_artifact_map, big_width, big_height, 255);   //Artifact values should be between 0-255;
+            //     writePPMGrey("./GUAS_TEST/GUAS_SERIAL.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
+            //     cudaDeviceSynchronize();
+            // }
             ////////////TIME GUASSIAN WITH SERIAL CODE IMPLEMENTATION/////////////////////
             
             ////////////TIME GUASSIAN NAIVE CUDA IMPLEMENTATION/////////////////////
             cudaEventRecord(astartEvent1, 0);
-            GuassianBlur_Threshold_Map_Naive_Kernel <<< NN_Grid, NN_Block >>>   (d_big_blurred_artifact_map , d_big_artifact_map, big_width, big_height, 3, 1.5, 0.05);
+            GuassianBlur_Threshold_Map_Naive_Kernel <<< Gaus_Naive_Grid, Gaus_Naive_Block >>>   (d_big_blurred_artifact_map , d_big_artifact_map, big_width, big_height, 3, 1.5, 0.05);
             cudaEventRecord(astopEvent1, 0);
             
             error = cudaGetLastError();
@@ -247,14 +251,14 @@ int main(int argc, char* argv[])
             //printf("GUASSIAN NAIVE, %f, ms\n", aelapsedTime1);
 
             //WRITE THE PICTURES FOR COMPARISON
-            if(i == ITERATIONS-1)
-            {            
-                //COPY OVER IMAGE DATA
-                cudaMemcpy(h_blurred_artifact_map   , d_big_blurred_artifact_map, sizeof(float) * big_width * big_height    , cudaMemcpyDeviceToHost);
-                Map2Greyscale(h_big_img_BLURRED_ARTIFACT_grey   , h_blurred_artifact_map, big_width, big_height, 255);   //Artifact values should be between 0-255;
-                writePPMGrey("./GUAS_TEST/GUAS_NAIVE.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
-                cudaDeviceSynchronize();
-            }
+            // if(i == ITERATIONS-1)
+            // {            
+            //     //COPY OVER IMAGE DATA
+            //     cudaMemcpy(h_blurred_artifact_map   , d_big_blurred_artifact_map, sizeof(float) * big_width * big_height    , cudaMemcpyDeviceToHost);
+            //     Map2Greyscale(h_big_img_BLURRED_ARTIFACT_grey   , h_blurred_artifact_map, big_width, big_height, 255);   //Artifact values should be between 0-255;
+            //     writePPMGrey("./GUAS_TEST/GUAS_NAIVE.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
+            //     cudaDeviceSynchronize();
+            // }
             ////////////TIME GUASSIAN NAIVE CUDA IMPLEMENTATION/////////////////////
 
 
@@ -287,14 +291,14 @@ int main(int argc, char* argv[])
             //printf("GUASSIAN VERTICAL SEPERABLE, %f, ms\n", aelapsedTime2);
 
             //WRITE THE PICTURES FOR COMPARISON
-            if(i == ITERATIONS-1)
-            {            
-                //COPY OVER IMAGE DATA
-                cudaMemcpy(h_blurred_artifact_map   , d_big_blurred_artifact_map, sizeof(float) * big_width * big_height    , cudaMemcpyDeviceToHost);
-                Map2Greyscale(h_big_img_BLURRED_ARTIFACT_grey   , h_blurred_artifact_map, big_width, big_height, 255);   //Artifact values should be between 0-255;
-                writePPMGrey("./GUAS_TEST/GUAS_SEPERABLE_CONVOLVE.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
-                cudaDeviceSynchronize();
-            }
+            // if(i == ITERATIONS-1)
+            // {            
+            //     //COPY OVER IMAGE DATA
+            //     cudaMemcpy(h_blurred_artifact_map   , d_big_blurred_artifact_map, sizeof(float) * big_width * big_height    , cudaMemcpyDeviceToHost);
+            //     Map2Greyscale(h_big_img_BLURRED_ARTIFACT_grey   , h_blurred_artifact_map, big_width, big_height, 255);   //Artifact values should be between 0-255;
+            //     writePPMGrey("./GUAS_TEST/GUAS_SEPERABLE_CONVOLVE.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
+            //     cudaDeviceSynchronize();
+            // }
             ////////////TIME GUASSIAN WITH SEPERABLE CUDA IMPLEMENTATION/////////////////////
 
         }

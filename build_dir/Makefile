@@ -117,17 +117,30 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named FusionImage_Solution
+# Target rules for targets named GUAS_TEST_BENCH_Solution
 
 # Build rule for target.
-FusionImage_Solution: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 FusionImage_Solution
-.PHONY : FusionImage_Solution
+GUAS_TEST_BENCH_Solution: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 GUAS_TEST_BENCH_Solution
+.PHONY : GUAS_TEST_BENCH_Solution
 
 # fast build rule for target.
-FusionImage_Solution/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FusionImage_Solution.dir/build.make CMakeFiles/FusionImage_Solution.dir/build
-.PHONY : FusionImage_Solution/fast
+GUAS_TEST_BENCH_Solution/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GUAS_TEST_BENCH_Solution.dir/build.make CMakeFiles/GUAS_TEST_BENCH_Solution.dir/build
+.PHONY : GUAS_TEST_BENCH_Solution/fast
+
+#=============================================================================
+# Target rules for targets named BIC_TEST_BENCH2_Solution
+
+# Build rule for target.
+BIC_TEST_BENCH2_Solution: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 BIC_TEST_BENCH2_Solution
+.PHONY : BIC_TEST_BENCH2_Solution
+
+# fast build rule for target.
+BIC_TEST_BENCH2_Solution/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BIC_TEST_BENCH2_Solution.dir/build.make CMakeFiles/BIC_TEST_BENCH2_Solution.dir/build
+.PHONY : BIC_TEST_BENCH2_Solution/fast
 
 # Help Target
 help:
@@ -137,7 +150,8 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... FusionImage_Solution"
+	@echo "... BIC_TEST_BENCH2_Solution"
+	@echo "... GUAS_TEST_BENCH_Solution"
 .PHONY : help
 
 

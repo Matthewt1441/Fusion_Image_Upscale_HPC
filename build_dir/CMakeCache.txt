@@ -538,7 +538,7 @@ CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 CUDA_64_BIT_DEVICE_CODE-ADVANCED:INTERNAL=1
 //List of intermediate files that are part of the cuda dependency
 // scanning.
-CUDA_ADDITIONAL_CLEAN_FILES:INTERNAL=/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/FusionImage_Solution.dir/Fusion_Image_Upscale/FusionImage/FusionImage_Solution_generated_solution.cu.o.depend
+CUDA_ADDITIONAL_CLEAN_FILES:INTERNAL=/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/FusionImage_Solution.dir/Fusion_Image_Upscale/FusionImage/FusionImage_Solution_generated_solution.cu.o.depend;/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/GUAS_TEST_BENCH_Solution.dir/Fusion_Image_Upscale/FusionImage/GUASS_TEST_BENCH/GUAS_TEST_BENCH_Solution_generated_solution.cu.o.depend;/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/BIC_TEST_BENCH2_Solution.dir/Fusion_Image_Upscale/FusionImage/BIC_TEST_BENCH2/BIC_TEST_BENCH2_Solution_generated_solution.cu.o.depend
 //ADVANCED property for variable: CUDA_ATTACH_VS_BUILD_RULE_TO_CUDA_FILE
 CUDA_ATTACH_VS_BUILD_RULE_TO_CUDA_FILE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CUDA_BUILD_CUBIN

@@ -31,7 +31,7 @@
 ###module load cuda11/11.0
 
 ### set directory for job execution, replace the following path with your own path
-hw_path=~matthewt1441/ece569/Fusion_Image_Upscale/build_dir
+hw_path=~matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir
 
 cd $hw_path
 
@@ -83,8 +83,9 @@ do
         do
             for block_dim_x in ${DIM_X[@]}
             do
-                file=guas_$((GAME_COUNT))_$((scale))_$((block_dim)).txt
-                ./GUASS_TEST_BENCH_Solution $scale $block_dim_x $block_dim_y $game -t vector > Kernel_Testing/GUASS/$file
+                file=gaus_$((GAME_COUNT))_$((scale))_$((block_dim_y))_$((block_dim_x)).txt
+                ./GUAS_TEST_BENCH_Solution $scale $block_dim_y $block_dim_x $game -t vector > Kernel_Testing/GAUSS/$file
+            done
         done
     done
     GAME_COUNT=$((GAME_COUNT+1))

@@ -10,9 +10,13 @@ set(CMAKE_MAKEFILE_DEPENDS
   "CMakeFiles/3.28.3/CMakeCCompiler.cmake"
   "CMakeFiles/3.28.3/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.28.3/CMakeSystem.cmake"
-  "CMakeFiles/FusionImage_Solution.dir/Fusion_Image_Upscale/FusionImage/FusionImage_Solution_generated_solution.cu.o.cmake.pre-gen"
-  "CMakeFiles/FusionImage_Solution.dir/Fusion_Image_Upscale/FusionImage/FusionImage_Solution_generated_solution.cu.o.depend"
+  "CMakeFiles/BIC_TEST_BENCH2_Solution.dir/Fusion_Image_Upscale/FusionImage/BIC_TEST_BENCH2/BIC_TEST_BENCH2_Solution_generated_solution.cu.o.cmake.pre-gen"
+  "CMakeFiles/BIC_TEST_BENCH2_Solution.dir/Fusion_Image_Upscale/FusionImage/BIC_TEST_BENCH2/BIC_TEST_BENCH2_Solution_generated_solution.cu.o.depend"
+  "CMakeFiles/GUAS_TEST_BENCH_Solution.dir/Fusion_Image_Upscale/FusionImage/GUASS_TEST_BENCH/GUAS_TEST_BENCH_Solution_generated_solution.cu.o.cmake.pre-gen"
+  "CMakeFiles/GUAS_TEST_BENCH_Solution.dir/Fusion_Image_Upscale/FusionImage/GUASS_TEST_BENCH/GUAS_TEST_BENCH_Solution_generated_solution.cu.o.depend"
   "/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/labs/CMakeLists.txt"
+  "/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/labs/Fusion_Image_Upscale/FusionImage/BIC_TEST_BENCH2/sources.cmake"
+  "/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/labs/Fusion_Image_Upscale/FusionImage/GUASS_TEST_BENCH/sources.cmake"
   "/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/labs/Fusion_Image_Upscale/FusionImage/sources.cmake"
   "/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/labs/Fusion_Image_Upscale/sources.cmake"
   "/opt/ohpc/pub/apps/cmake/3.28.3/share/cmake-3.28/Modules/CMakeCInformation.cmake"
@@ -53,12 +57,15 @@ set(CMAKE_MAKEFILE_OUTPUTS
 
 # Byproducts of CMake generate step:
 set(CMAKE_MAKEFILE_PRODUCTS
-  "CMakeFiles/FusionImage_Solution.dir/Fusion_Image_Upscale/FusionImage/FusionImage_Solution_generated_solution.cu.o.cmake.pre-gen"
-  "CMakeFiles/FusionImage_Solution.dir/Fusion_Image_Upscale/FusionImage/FusionImage_Solution_generated_solution.cu.o.Release.cmake"
+  "CMakeFiles/GUAS_TEST_BENCH_Solution.dir/Fusion_Image_Upscale/FusionImage/GUASS_TEST_BENCH/GUAS_TEST_BENCH_Solution_generated_solution.cu.o.cmake.pre-gen"
+  "CMakeFiles/BIC_TEST_BENCH2_Solution.dir/Fusion_Image_Upscale/FusionImage/BIC_TEST_BENCH2/BIC_TEST_BENCH2_Solution_generated_solution.cu.o.cmake.pre-gen"
+  "CMakeFiles/GUAS_TEST_BENCH_Solution.dir/Fusion_Image_Upscale/FusionImage/GUASS_TEST_BENCH/GUAS_TEST_BENCH_Solution_generated_solution.cu.o.Release.cmake"
+  "CMakeFiles/BIC_TEST_BENCH2_Solution.dir/Fusion_Image_Upscale/FusionImage/BIC_TEST_BENCH2/BIC_TEST_BENCH2_Solution_generated_solution.cu.o.Release.cmake"
   "CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/FusionImage_Solution.dir/DependInfo.cmake"
+  "CMakeFiles/GUAS_TEST_BENCH_Solution.dir/DependInfo.cmake"
+  "CMakeFiles/BIC_TEST_BENCH2_Solution.dir/DependInfo.cmake"
   )

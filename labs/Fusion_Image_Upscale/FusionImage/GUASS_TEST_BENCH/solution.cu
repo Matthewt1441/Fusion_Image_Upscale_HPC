@@ -214,7 +214,7 @@ int main(int argc, char* argv[])
 
             auto end = std::chrono::high_resolution_clock::now();
             auto dur = end - start;
-            Serial_Time[i] = std::chrono::duration_cast<std::chrono::microseconds>(dur).count()/1000;
+            Serial_Time[i] = std::chrono::duration_cast<std::chrono::microseconds>(dur).count()/1000.0;
 
             //printf("GUAS SERIAL CODE, %f, ms\n", processing_time/1000);
 

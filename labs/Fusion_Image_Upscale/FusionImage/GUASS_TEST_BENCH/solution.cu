@@ -76,6 +76,7 @@ int main(int argc, char* argv[])
         strcat(file_name, "1.ppm"); // append string two to the result.
         
         printf(file_name);
+        printf("\n");
 
         h_img = (unsigned char*)readPPM(file_name, &width, &height);
         free(h_img);
@@ -216,6 +217,36 @@ int main(int argc, char* argv[])
                 cudaDeviceSynchronize();
             }
             ////////////TIME GUASSIAN WITH SERIAL CODE IMPLEMENTATION/////////////////////
+            
+            ////////////TIME GUASSIAN NAIVE CUDA IMPLEMENTATION/////////////////////
+            cudaEventRecord(astartEvent1, 0);
+            GuassianBlur_Threshold_Map_Naive_Kernel <<< NN_Grid, NN_Block >>>   (d_big_blurred_artifact_map , d_big_artifact_map, big_width, big_height, 3, 1.5, 0.05);
+            cudaEventRecord(astopEvent1, 0);
+            
+            error = cudaGetLastError();
+            if(error != cudaSuccess)
+            {
+                // print the CUDA error message and exit
+                printf("NAIVE CUDA error: %s\n", cudaGetErrorString(error));
+                exit(-1);
+            }
+            cudaDeviceSynchronize();
+
+            cudaEventSynchronize(astopEvent1);
+            cudaEventElapsedTime(&aelapsedTime1, astartEvent1, astopEvent1);
+            printf("GUASSIAN NAIVE, %f, ms\n", aelapsedTime1);
+
+            //WRITE THE PICTURES FOR COMPARISON
+            if(i == 4)
+            {            
+                //COPY OVER IMAGE DATA
+                cudaMemcpy(h_blurred_artifact_map   , d_big_blurred_artifact_map, sizeof(float) * big_width * big_height    , cudaMemcpyDeviceToHost);
+                Map2Greyscale(h_big_img_BLURRED_ARTIFACT_grey   , h_blurred_artifact_map, big_width, big_height, 255);   //Artifact values should be between 0-255;
+                writePPMGrey("./GUAS_TEST/GUAS_NAIVE.ppm", (char*)h_blurred_artifact_map, big_width, big_height);
+                cudaDeviceSynchronize();
+            }
+            ////////////TIME GUASSIAN NAIVE CUDA IMPLEMENTATION/////////////////////
+
 
             ////////////TIME GUASSIAN WITH SEPERABLE CUDA IMPLEMENTATION/////////////////////
             cudaEventRecord(astartEvent1, 0);
@@ -230,7 +261,7 @@ int main(int argc, char* argv[])
             if(error != cudaSuccess)
             {
                 // print the CUDA error message and exit
-                printf("NAIVE CUDA error: %s\n", cudaGetErrorString(error));
+                printf("SEPERABLE CUDA error: %s\n", cudaGetErrorString(error));
                 exit(-1);
             }
             cudaDeviceSynchronize();
@@ -252,6 +283,8 @@ int main(int argc, char* argv[])
                 writePPMGrey("./GUAS_TEST/GUAS_SEPERABLE_CONVOLVE.ppm", (char*)h_blurred_artifact_map, big_width, big_height);
                 cudaDeviceSynchronize();
             }
+            ////////////TIME GUASSIAN WITH SEPERABLE CUDA IMPLEMENTATION/////////////////////
+
         }
 
         //************************* CLEAN UP *****************************//

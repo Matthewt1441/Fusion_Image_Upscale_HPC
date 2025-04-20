@@ -813,4 +813,52 @@ __global__ void verticalGuassianBlurConvolve(float* blur_map, float* input_map, 
 }
 
 
+__global__ void GuassianBlur_Threshold_Map_Naive_Kernel(float* blur_map, float* input_map, int width, int height, int radius, float sigma, float threshold)
+{
+    //Generate Normalized Guassian Kernal for blurring. This may need to be adjusted so I'll make it flexible.
+    //We can eventually hardcode this when we settle on ideal blur.
+    int kernel_size = 2 * radius + 1;
+    int kernel_center = kernel_size / 2;
+    float sum = 0.0;
+    float guassian_kernel[49] = { 0 };
 
+    int Row = blockIdx.y * blockDim.y + threadIdx.y;
+    int Col = blockIdx.x * blockDim.x + threadIdx.x;
+
+    float M_PI = 3.14;
+
+    if (Row < height && Col < width)
+    {
+        for (int y = 0; y < kernel_size; y++)
+        {
+            for (int x = 0; x < kernel_size; x++)
+            {
+                double exponent = -((x - kernel_center) * (x - kernel_center) - (y - kernel_center) * (y - kernel_center)) / (2 * sigma * sigma);
+                guassian_kernel[y * kernel_size + x] = exp(exponent) / (2 * M_PI * sigma * sigma);
+                sum += guassian_kernel[y * kernel_size + x];
+            }
+        }
+        //Normalize
+        //May not want to do this as edge cases will not utilize entire kernel.
+        //Will try for now. It may be the right way to do it. I don't know for sure.
+        for (int i = 0; i < kernel_size; i++)
+            for (int j = 0; j < kernel_size; j++)
+                guassian_kernel[i * kernel_size + j] /= sum;
+
+        sum = 0.0;
+
+        for (int i = 0; i < kernel_size; i++) {
+            for (int j = 0; j < kernel_size; j++) {
+                int map_y = Row + i - radius; //
+                int map_x = Col + j - radius;
+
+                //If we are within the image
+                if (map_x >= 0 && map_x < width && map_y >= 0 && map_y < height) {
+                    sum += input_map[map_y * width + map_x] * guassian_kernel[i * kernel_size + j];
+                }
+            }
+        }
+
+        blur_map[Row * width + Col] = (sum > threshold) ? 1.0 : 0.0;
+    }
+}

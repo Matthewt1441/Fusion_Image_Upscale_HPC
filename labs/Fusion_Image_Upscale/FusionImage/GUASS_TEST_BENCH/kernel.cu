@@ -862,3 +862,75 @@ __global__ void GuassianBlur_Threshold_Map_Naive_Kernel(float* blur_map, float* 
         blur_map[Row * width + Col] = (sum > threshold) ? 1.0 : 0.0;
     }
 }
+
+__device__ float calculateSSIM_Device(float window1[8][8], float window2[8][8], int window_width, int window_height)
+{
+    float sum1 = 0, sum2 = 0, sum1Sq = 0, sum2Sq = 0, sum12 = 0;
+    int size = window_height * window_width;
+    int valid_count = 0;
+
+    for (int i = 0; i < window_height; ++i)
+    {
+        for (int j = 0; j < window_width; ++j)
+        {
+            if ((window1[i][j] >= 0) && (window2[i][j] >= 0))
+            {
+                sum1 += window1[i][j];
+                sum2 += window2[i][j];
+                sum1Sq += window1[i][j] * window1[i][j];
+                sum2Sq += window2[i][j] * window2[i][j];
+                sum12 += window1[i][j] * window2[i][j];
+                valid_count++;
+            }
+        }
+    }
+
+    float mu1 = sum1 / valid_count;
+    float mu2 = sum2 / valid_count;
+    float sigma1Sq = (sum1Sq / valid_count) - (mu1 * mu1);
+    float sigma2Sq = (sum2Sq / valid_count) - (mu2 * mu2);
+    float sigma12 = (sum12 / valid_count) - (mu1 * mu2);
+
+    // Stabilizing constants
+    float C1 = 6.5025; // (K1*L)^2, where K1=0.01 and L=255
+    float C2 = 58.5225; // (K2*L)^2, where K2=0.03 and L=255
+
+    float ssim = ((2 * mu1 * mu2 + C1) * (2 * sigma12 + C2)) / ((mu1 * mu1 + mu2 * mu2 + C1) * (sigma1Sq + sigma2Sq + C2));
+    return ssim;
+}
+
+__global__ void Artifact_Grey_Kernel(float* artifact_map, unsigned char* img_1, unsigned char* img_2, int width, int height)
+{
+    //int window_size = 8;
+    //Window size dictates the size of structures that we can detect. Maybe should look into what effect this has
+    //on overall image quality & performance
+    // Consider the guassian option with an 11x11 window
+    float window_img1[8][8] = { 0 };
+    float window_img2[8][8] = { 0 };
+
+    int Row = blockIdx.y * blockDim.y + threadIdx.y;
+    int Col = blockIdx.x * blockDim.x + threadIdx.x;
+
+    //For now, generate a smaller image.
+    if (Row < height && Col < width)
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                if (((Row + i) * width + (Col + j)) < (width * height))
+                {
+                    window_img1[i][j] = img_1[(Row + i) * width + (Col + j)];
+                    window_img2[i][j] = img_2[(Row + i) * width + (Col + j)];
+                }
+                else
+                {
+                    window_img1[i][j] = -1;
+                    window_img2[i][j] = -1;
+                }
+            }
+        }
+
+        artifact_map[Row * width + Col] = calculateSSIM_Device(window_img1, window_img2, 8, 8) * (float)abs((window_img1[0][0] - window_img2[0][0]) / 255.0);
+    }
+}

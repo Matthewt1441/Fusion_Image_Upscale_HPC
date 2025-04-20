@@ -336,14 +336,14 @@ void GuassianBlur_Map(float* blur_map, float* input_map, int width, int height, 
     float sum = 0.0;
     float* guassian_kernel = (float*)malloc(sizeof(float) * kernel_size * kernel_size);
 
-    float M_PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164062;
+    float my_PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164062;
 
     for (int y = 0; y < kernel_size; y++)
     {
         for (int x = 0; x < kernel_size; x++)
         {
             double exponent = -((x - kernel_center) * (x - kernel_center) - (y - kernel_center) * (y - kernel_center)) / (2 * sigma * sigma);
-            guassian_kernel[y * kernel_size + x] = exp(exponent) / (2 * M_PI * sigma * sigma);
+            guassian_kernel[y * kernel_size + x] = exp(exponent) / (2 * my_PI * sigma * sigma);
             sum += guassian_kernel[y * kernel_size + x];
         }
     }

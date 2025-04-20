@@ -33,7 +33,6 @@ int main(int argc, char* argv[])
     unsigned char*  h_big_img_ARTIFACT_grey;            //Upscaled Greyscale ARTIFACT Image
     unsigned char*  h_big_img_BLURRED_ARTIFACT_grey;    //Upscaled Greyscale BLURRED ARTIFACT Image
     unsigned char*  h_big_img_fused;                    //Upscaled Fused Image
-    unsigned char*  h_big_img_fused;                    //Upscaled Fused Image
     float*          h_diff_map;                         //Difference Map
     float*          h_ssim_map;                         //SSIM Map
     float*          h_artifact_map;                     //Artifact Map

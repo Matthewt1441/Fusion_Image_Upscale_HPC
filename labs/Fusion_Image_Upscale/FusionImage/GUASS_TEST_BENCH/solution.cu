@@ -186,13 +186,13 @@ int main(int argc, char* argv[])
         cudaDeviceSynchronize();
 
         //Serial Code Up Until Guass
-        nearestNeighbors(h_big_img_nn_grey, h_big_img_nn, big_width, big_height, h_img, width, height, scale);
-        bicubicInterpolation(h_big_img_bic, big_width, big_height, h_img, width, height, scale);
-        RGB2Greyscale(h_big_img_bic_grey, h_big_img_bic, big_width, big_height);
+        // nearestNeighbors(h_big_img_nn_grey, h_big_img_nn, big_width, big_height, h_img, width, height, scale);
+        // bicubicInterpolation(h_big_img_bic, big_width, big_height, h_img, width, height, scale);
+        // RGB2Greyscale(h_big_img_bic_grey, h_big_img_bic, big_width, big_height);
         
-        ABS_Difference_Grey(h_diff_map, h_big_img_nn_grey, h_big_img_bic_grey, big_width, big_height);
-        SSIM_Grey(h_ssim_map, h_big_img_nn_grey, h_big_img_bic_grey, big_width, big_height);
-        MapMul(h_artifact_map, h_diff_map, h_ssim_map, big_width, big_height);
+        // ABS_Difference_Grey(h_diff_map, h_big_img_nn_grey, h_big_img_bic_grey, big_width, big_height);
+        // SSIM_Grey(h_ssim_map, h_big_img_nn_grey, h_big_img_bic_grey, big_width, big_height);
+        // MapMul(h_artifact_map, h_diff_map, h_ssim_map, big_width, big_height);
 
         //CUDA Code Up until Guass
         nearestNeighbors_GreyCon_Kernel_RGBA                    <<< NN_Grid, NN_Block >>>                                   (d_big_img_nn, d_big_img_nn_grey, d_RGBA_img, big_width, big_height, width, height, scale);
@@ -210,26 +210,26 @@ int main(int argc, char* argv[])
         double Average_Time = 0;
         for (int i = 0; i < ITERATIONS; i ++)
         {
-            ////////////TIME GUASSIAN WITH SERIAL CODE IMPLEMENTATION/////////////////////
-            auto start = std::chrono::high_resolution_clock::now();
+            // ////////////TIME GUASSIAN WITH SERIAL CODE IMPLEMENTATION/////////////////////
+            // auto start = std::chrono::high_resolution_clock::now();
 
-            GuassianBlur_Map(h_blurred_artifact_map, h_artifact_map, big_width, big_height, 3, 1.5);
-            MapThreshold(h_blurred_artifact_map, 0.05, big_width, big_height);
+            // GuassianBlur_Map(h_blurred_artifact_map, h_artifact_map, big_width, big_height, 3, 1.5);
+            // MapThreshold(h_blurred_artifact_map, 0.05, big_width, big_height);
 
-            auto end = std::chrono::high_resolution_clock::now();
-            auto dur = end - start;
-            Serial_Time[i] = std::chrono::duration_cast<std::chrono::microseconds>(dur).count()/1000.0;
+            // auto end = std::chrono::high_resolution_clock::now();
+            // auto dur = end - start;
+            // Serial_Time[i] = std::chrono::duration_cast<std::chrono::microseconds>(dur).count()/1000.0;
 
-            //printf("GUAS SERIAL CODE, %f, ms\n", processing_time/1000);
+            // //printf("GUAS SERIAL CODE, %f, ms\n", processing_time/1000);
 
-            //WRITE THE PICTURES FOR COMPARISON
-            // if(i == ITERATIONS-1)
-            // {
-            //     Map2Greyscale(h_big_img_BLURRED_ARTIFACT_grey   , h_blurred_artifact_map, big_width, big_height, 255);   //Artifact values should be between 0-255;
-            //     writePPMGrey("./GUAS_TEST/GUAS_SERIAL.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
-            //     cudaDeviceSynchronize();
-            // }
-            ////////////TIME GUASSIAN WITH SERIAL CODE IMPLEMENTATION/////////////////////
+            // //WRITE THE PICTURES FOR COMPARISON
+            // // if(i == ITERATIONS-1)
+            // // {
+            // //     Map2Greyscale(h_big_img_BLURRED_ARTIFACT_grey   , h_blurred_artifact_map, big_width, big_height, 255);   //Artifact values should be between 0-255;
+            // //     writePPMGrey("./GUAS_TEST/GUAS_SERIAL.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
+            // //     cudaDeviceSynchronize();
+            // // }
+            // ////////////TIME GUASSIAN WITH SERIAL CODE IMPLEMENTATION/////////////////////
             
             ////////////TIME GUASSIAN NAIVE CUDA IMPLEMENTATION/////////////////////
             cudaEventRecord(astartEvent1, 0);
@@ -310,14 +310,14 @@ int main(int argc, char* argv[])
         }
         printf("Average\n");
 
-        Average_Time = 0;
-        printf("Serial, ");
-        for(int i = 0; i<ITERATIONS; i++)
-        {
-            Average_Time += Serial_Time[i];
-            printf("%f, ", Serial_Time[i]);
-        }
-        printf("%f\n", Average_Time/ITERATIONS);
+        // Average_Time = 0;
+        // printf("Serial, ");
+        // for(int i = 0; i<ITERATIONS; i++)
+        // {
+        //     Average_Time += Serial_Time[i];
+        //     printf("%f, ", Serial_Time[i]);
+        // }
+        // printf("%f\n", Average_Time/ITERATIONS);
 
         Average_Time = 0;
         printf("Naive, ");

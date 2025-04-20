@@ -14,7 +14,7 @@
 int main(int argc, char* argv[])
 {
 
-    int scale = atoi(argv[1]); int block_dim_y = atoi(argv[2]); int block_dim_x = atoi(argv[3]);
+    int scale = atoi(argv[1]); //int block_dim_y = atoi(argv[2]); int block_dim_x = atoi(argv[3]);
     int width;
     int height;
 
@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
  
         //**************** Setup Kernel ****************//
         
-        strcpy(file_name, argv[4]); // copy string one into the result.
+        strcpy(file_name, argv[2]); // copy string one into the result.
         strcat(file_name, "1.ppm"); // append string two to the result.
         
         printf(file_name);
@@ -154,12 +154,12 @@ int main(int argc, char* argv[])
         //Setup Guassian Blur based on passed in Args
         int GUAS_Ksize = 7;
         float GUAS_Sigma = 1.5;
-        dim3 h_Guas_Block(block_dim_x, block_dim_y);
-        dim3 h_Guas_Grid(((big_width - 1) / h_Guas_Block.x) + 1, ((big_height - 1) / h_Guas_Block.y) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
-        dim3 v_Guas_Block(block_dim_x, block_dim_y);
-        dim3 v_Guas_Grid(((big_width - 1) / v_Guas_Block.x) + 1, ((big_height - 1) / v_Guas_Block.y) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
-        dim3 Gaus_Naive_Block(block_dim_x, block_dim_y);
-        dim3 Gaus_Naive_Grid(((big_width - 1) / Gaus_Naive_Block.x) + 1, ((big_height - 1) / Gaus_Naive_Block.y) + 1); 
+        // dim3 h_Guas_Block(block_dim_x, block_dim_y);
+        // dim3 h_Guas_Grid(((big_width - 1) / h_Guas_Block.x) + 1, ((big_height - 1) / h_Guas_Block.y) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
+        // dim3 v_Guas_Block(block_dim_x, block_dim_y);
+        // dim3 v_Guas_Grid(((big_width - 1) / v_Guas_Block.x) + 1, ((big_height - 1) / v_Guas_Block.y) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
+        // dim3 Gaus_Naive_Block(block_dim_x, block_dim_y);
+        // dim3 Gaus_Naive_Grid(((big_width - 1) / Gaus_Naive_Block.x) + 1, ((big_height - 1) / Gaus_Naive_Block.y) + 1); 
 
 
 
@@ -201,150 +201,176 @@ int main(int argc, char* argv[])
         //Artifact_Grey_Kernel                                    <<< Arti_Grid, Arti_Block >>>                               (d_big_artifact_map         , d_big_img_nn_grey             , d_big_img_bic_grey        , big_width, big_height);
         
         //******************************* Run & Time Kernels ********************************//
-        printf("Guassian Blur Test\nBlock Dimensions, %d x %d, Scale Factor, %d\nInput Image Dimensions, %d , %d\nOutput Image Dimensions, %d, %d\n", block_dim_x, block_dim_y, scale, width, height, big_width, big_height);
-        #define ITERATIONS 5
-        double Serial_Time[ITERATIONS] = {0};
-        double Naive_Time[ITERATIONS] = {0};
-        double Horizontal_Seperable_Time[ITERATIONS] = {0};
-        double Vertical_Seperable_Time[ITERATIONS] = {0};
-        double Average_Time = 0;
-        for (int i = 0; i < ITERATIONS; i ++)
-        {
-            // ////////////TIME GUASSIAN WITH SERIAL CODE IMPLEMENTATION/////////////////////
-            // auto start = std::chrono::high_resolution_clock::now();
-
-            // GuassianBlur_Map(h_blurred_artifact_map, h_artifact_map, big_width, big_height, 3, 1.5);
-            // MapThreshold(h_blurred_artifact_map, 0.05, big_width, big_height);
-
-            // auto end = std::chrono::high_resolution_clock::now();
-            // auto dur = end - start;
-            // Serial_Time[i] = std::chrono::duration_cast<std::chrono::microseconds>(dur).count()/1000.0;
-
-            // //printf("GUAS SERIAL CODE, %f, ms\n", processing_time/1000);
-
-            // //WRITE THE PICTURES FOR COMPARISON
-            // // if(i == ITERATIONS-1)
-            // // {
-            // //     Map2Greyscale(h_big_img_BLURRED_ARTIFACT_grey   , h_blurred_artifact_map, big_width, big_height, 255);   //Artifact values should be between 0-255;
-            // //     writePPMGrey("./GUAS_TEST/GUAS_SERIAL.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
-            // //     cudaDeviceSynchronize();
-            // // }
-            // ////////////TIME GUASSIAN WITH SERIAL CODE IMPLEMENTATION/////////////////////
-            
-            ////////////TIME GUASSIAN NAIVE CUDA IMPLEMENTATION/////////////////////
-            cudaEventRecord(astartEvent1, 0);
-            GuassianBlur_Threshold_Map_Naive_Kernel <<< Gaus_Naive_Grid, Gaus_Naive_Block >>>   (d_big_blurred_artifact_map , d_big_artifact_map, big_width, big_height, 3, 1.5, 0.05);
-            cudaEventRecord(astopEvent1, 0);
-            
-            error = cudaGetLastError();
-            if(error != cudaSuccess)
-            {
-                // print the CUDA error message and exit
-                printf("NAIVE CUDA error: %s\n", cudaGetErrorString(error));
-                exit(-1);
-            }
-            cudaDeviceSynchronize();
-
-            cudaEventSynchronize(astopEvent1);
-            cudaEventElapsedTime(&aelapsedTime1, astartEvent1, astopEvent1);
-            Naive_Time[i] = aelapsedTime1;
-            //printf("GUASSIAN NAIVE, %f, ms\n", aelapsedTime1);
-
-            //WRITE THE PICTURES FOR COMPARISON
-            // if(i == ITERATIONS-1)
-            // {            
-            //     //COPY OVER IMAGE DATA
-            //     cudaMemcpy(h_blurred_artifact_map   , d_big_blurred_artifact_map, sizeof(float) * big_width * big_height    , cudaMemcpyDeviceToHost);
-            //     Map2Greyscale(h_big_img_BLURRED_ARTIFACT_grey   , h_blurred_artifact_map, big_width, big_height, 255);   //Artifact values should be between 0-255;
-            //     writePPMGrey("./GUAS_TEST/GUAS_NAIVE.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
-            //     cudaDeviceSynchronize();
-            // }
-            ////////////TIME GUASSIAN NAIVE CUDA IMPLEMENTATION/////////////////////
-
-
-            ////////////TIME GUASSIAN WITH SEPERABLE CUDA IMPLEMENTATION/////////////////////
-            cudaEventRecord(astartEvent1, 0);
-            horizontalGuassianBlurConvolve  <<< h_Guas_Grid, h_Guas_Block, sizeof(float) * (h_Guas_Block.x + GUAS_Ksize - 1) * h_Guas_Block.y >>>(d_big_blurred_artifact_map_inter, d_big_artifact_map, big_width, big_height, GUAS_Ksize);
-            cudaEventRecord(astopEvent1, 0);
-    
-            cudaEventRecord(astartEvent2, 0);
-            verticalGuassianBlurConvolve    <<< v_Guas_Grid, v_Guas_Block, sizeof(float) * (v_Guas_Block.y + GUAS_Ksize - 1) * v_Guas_Block.x >>>(d_big_blurred_artifact_map, d_big_blurred_artifact_map_inter, big_width, big_height, 0.05, GUAS_Ksize);
-            cudaEventRecord(astopEvent2, 0);
-            
-            error = cudaGetLastError();
-            if(error != cudaSuccess)
-            {
-                // print the CUDA error message and exit
-                printf("SEPERABLE CUDA error: %s\n", cudaGetErrorString(error));
-                exit(-1);
-            }
-            cudaDeviceSynchronize();
-
-            cudaEventSynchronize(astopEvent1);
-            cudaEventElapsedTime(&aelapsedTime1, astartEvent1, astopEvent1);
-            Horizontal_Seperable_Time[i] = aelapsedTime1;
-            //printf("GUASSIAN HORIZONTAL SEPERABLE, %f, ms\n", aelapsedTime1);
-    
-            cudaEventSynchronize(astopEvent2);
-            cudaEventElapsedTime(&aelapsedTime2, astartEvent2, astopEvent2);
-            Vertical_Seperable_Time[i] = aelapsedTime2;
-            //printf("GUASSIAN VERTICAL SEPERABLE, %f, ms\n", aelapsedTime2);
-
-            //WRITE THE PICTURES FOR COMPARISON
-            // if(i == ITERATIONS-1)
-            // {            
-            //     //COPY OVER IMAGE DATA
-            //     cudaMemcpy(h_blurred_artifact_map   , d_big_blurred_artifact_map, sizeof(float) * big_width * big_height    , cudaMemcpyDeviceToHost);
-            //     Map2Greyscale(h_big_img_BLURRED_ARTIFACT_grey   , h_blurred_artifact_map, big_width, big_height, 255);   //Artifact values should be between 0-255;
-            //     writePPMGrey("./GUAS_TEST/GUAS_SEPERABLE_CONVOLVE.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
-            //     cudaDeviceSynchronize();
-            // }
-            ////////////TIME GUASSIAN WITH SEPERABLE CUDA IMPLEMENTATION/////////////////////
-
-        }
-
-        printf("Version, ");
+        printf("Guassian Blur Test\nScale Factor, %d\nInput Image Dimensions, %d , %d\nOutput Image Dimensions, %d, %d\n", scale, width, height, big_width, big_height);
+   
+        printf("Block_Y, Block_X, Version, ")
         for(int i = 0; i<ITERATIONS; i++)
         {
-            printf("Iteration %d, ", i);
+            printf("Iteration %d, ", i+1);
         }
         printf("Average\n");
 
-        // Average_Time = 0;
-        // printf("Serial, ");
-        // for(int i = 0; i<ITERATIONS; i++)
-        // {
-        //     Average_Time += Serial_Time[i];
-        //     printf("%f, ", Serial_Time[i]);
-        // }
-        // printf("%f\n", Average_Time/ITERATIONS);
-
-        Average_Time = 0;
-        printf("Naive, ");
-        for(int i = 0; i<ITERATIONS; i++)
+        for(int y = 1; y <= 1024; y*=2)
         {
-            Average_Time += Naive_Time[i];
-            printf("%f, ", Naive_Time[i]);
-        }
-        printf("%f\n", Average_Time/ITERATIONS);
+            for(int x = 1; x <= 1024; x*=2)
+            {
+                dim3 h_Guas_Block(x, y);
+                dim3 h_Guas_Grid(((big_width - 1) / h_Guas_Block.x) + 1, ((big_height - 1) / h_Guas_Block.y) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
+                dim3 v_Guas_Block(x, y);
+                dim3 v_Guas_Grid(((big_width - 1) / v_Guas_Block.x) + 1, ((big_height - 1) / v_Guas_Block.y) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
+                dim3 Gaus_Naive_Block(x, y);
+                dim3 Gaus_Naive_Grid(((big_width - 1) / Gaus_Naive_Block.x) + 1, ((big_height - 1) / Gaus_Naive_Block.y) + 1); 
 
-        Average_Time = 0;
-        printf("Horizontal Seperable, ");
-        for(int i = 0; i<ITERATIONS; i++)
-        {
-            Average_Time += Horizontal_Seperable_Time[i];
-            printf("%f, ", Horizontal_Seperable_Time[i]);
-        }
-        printf("%f\n", Average_Time/ITERATIONS);
+                //printf("Guassian Blur Test\nBlock Dimensions, %d x %d, Scale Factor, %d\nInput Image Dimensions, %d , %d\nOutput Image Dimensions, %d, %d\n", block_dim_x, block_dim_y, scale, width, height, big_width, big_height);
+                #define ITERATIONS 5
+                double Serial_Time[ITERATIONS] = {0};
+                double Naive_Time[ITERATIONS] = {0};
+                double Horizontal_Seperable_Time[ITERATIONS] = {0};
+                double Vertical_Seperable_Time[ITERATIONS] = {0};
+                double Average_Time = 0;
+                for (int i = 0; i < ITERATIONS; i ++)
+                {
+                    // ////////////TIME GUASSIAN WITH SERIAL CODE IMPLEMENTATION/////////////////////
+                    // auto start = std::chrono::high_resolution_clock::now();
 
-        Average_Time = 0;
-        printf("Vertical Seperable, ");
-        for(int i = 0; i<ITERATIONS; i++)
-        {
-            Average_Time += Vertical_Seperable_Time[i];
-            printf("%f, ", Vertical_Seperable_Time[i]);
+                    // GuassianBlur_Map(h_blurred_artifact_map, h_artifact_map, big_width, big_height, 3, 1.5);
+                    // MapThreshold(h_blurred_artifact_map, 0.05, big_width, big_height);
+
+                    // auto end = std::chrono::high_resolution_clock::now();
+                    // auto dur = end - start;
+                    // Serial_Time[i] = std::chrono::duration_cast<std::chrono::microseconds>(dur).count()/1000.0;
+
+                    // //printf("GUAS SERIAL CODE, %f, ms\n", processing_time/1000);
+
+                    // //WRITE THE PICTURES FOR COMPARISON
+                    // // if(i == ITERATIONS-1)
+                    // // {
+                    // //     Map2Greyscale(h_big_img_BLURRED_ARTIFACT_grey   , h_blurred_artifact_map, big_width, big_height, 255);   //Artifact values should be between 0-255;
+                    // //     writePPMGrey("./GUAS_TEST/GUAS_SERIAL.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
+                    // //     cudaDeviceSynchronize();
+                    // // }
+                    // ////////////TIME GUASSIAN WITH SERIAL CODE IMPLEMENTATION/////////////////////
+                    
+                    ////////////TIME GUASSIAN NAIVE CUDA IMPLEMENTATION/////////////////////
+                    cudaEventRecord(astartEvent1, 0);
+                    GuassianBlur_Threshold_Map_Naive_Kernel <<< Gaus_Naive_Grid, Gaus_Naive_Block >>>   (d_big_blurred_artifact_map , d_big_artifact_map, big_width, big_height, 3, 1.5, 0.05);
+                    cudaEventRecord(astopEvent1, 0);
+                    
+                    error = cudaGetLastError();
+                    if(error != cudaSuccess)
+                    {
+                        // print the CUDA error message and exit
+                        Naive_Time[i] = -1.0;
+                        //printf("NAIVE CUDA error: %s\n", cudaGetErrorString(error));
+                        //exit(-1);
+                    }
+                    else
+                    {
+                        cudaDeviceSynchronize();
+                        cudaEventSynchronize(astopEvent1);
+                        cudaEventElapsedTime(&aelapsedTime1, astartEvent1, astopEvent1);
+                        Naive_Time[i] = aelapsedTime1;
+                    }
+                    cudaDeviceSynchronize();
+
+
+                    //printf("GUASSIAN NAIVE, %f, ms\n", aelapsedTime1);
+
+                    //WRITE THE PICTURES FOR COMPARISON
+                    // if(i == ITERATIONS-1)
+                    // {            
+                    //     //COPY OVER IMAGE DATA
+                    //     cudaMemcpy(h_blurred_artifact_map   , d_big_blurred_artifact_map, sizeof(float) * big_width * big_height    , cudaMemcpyDeviceToHost);
+                    //     Map2Greyscale(h_big_img_BLURRED_ARTIFACT_grey   , h_blurred_artifact_map, big_width, big_height, 255);   //Artifact values should be between 0-255;
+                    //     writePPMGrey("./GUAS_TEST/GUAS_NAIVE.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
+                    //     cudaDeviceSynchronize();
+                    // }
+                    ////////////TIME GUASSIAN NAIVE CUDA IMPLEMENTATION/////////////////////
+
+
+                    ////////////TIME GUASSIAN WITH SEPERABLE CUDA IMPLEMENTATION/////////////////////
+                    cudaEventRecord(astartEvent1, 0);
+                    horizontalGuassianBlurConvolve  <<< h_Guas_Grid, h_Guas_Block, sizeof(float) * (h_Guas_Block.x + GUAS_Ksize - 1) * h_Guas_Block.y >>>(d_big_blurred_artifact_map_inter, d_big_artifact_map, big_width, big_height, GUAS_Ksize);
+                    cudaEventRecord(astopEvent1, 0);
+            
+                    cudaEventRecord(astartEvent2, 0);
+                    verticalGuassianBlurConvolve    <<< v_Guas_Grid, v_Guas_Block, sizeof(float) * (v_Guas_Block.y + GUAS_Ksize - 1) * v_Guas_Block.x >>>(d_big_blurred_artifact_map, d_big_blurred_artifact_map_inter, big_width, big_height, 0.05, GUAS_Ksize);
+                    cudaEventRecord(astopEvent2, 0);
+                    
+                    error = cudaGetLastError();
+                    if(error != cudaSuccess)
+                    {
+                        // print the CUDA error message and exit
+                        Horizontal_Seperable_Time[i] = -1.0;
+                        Vertical_Seperable_Time[i] = -1.0;
+                        //printf("SEPERABLE CUDA error: %s\n", cudaGetErrorString(error));
+                        //exit(-1);
+                    }
+                    else
+                    {
+                        cudaDeviceSynchronize();
+                        cudaEventSynchronize(astopEvent1);
+                        cudaEventElapsedTime(&aelapsedTime1, astartEvent1, astopEvent1);
+                        Horizontal_Seperable_Time[i] = aelapsedTime1;
+
+                        cudaEventSynchronize(astopEvent2);
+                        cudaEventElapsedTime(&aelapsedTime2, astartEvent2, astopEvent2);
+                        Vertical_Seperable_Time[i] = aelapsedTime2;
+                    }
+                    cudaDeviceSynchronize();
+
+                    //printf("GUASSIAN HORIZONTAL SEPERABLE, %f, ms\n", aelapsedTime1);
+                    //printf("GUASSIAN VERTICAL SEPERABLE, %f, ms\n", aelapsedTime2);
+
+                    //WRITE THE PICTURES FOR COMPARISON
+                    // if(i == ITERATIONS-1)
+                    // {            
+                    //     //COPY OVER IMAGE DATA
+                    //     cudaMemcpy(h_blurred_artifact_map   , d_big_blurred_artifact_map, sizeof(float) * big_width * big_height    , cudaMemcpyDeviceToHost);
+                    //     Map2Greyscale(h_big_img_BLURRED_ARTIFACT_grey   , h_blurred_artifact_map, big_width, big_height, 255);   //Artifact values should be between 0-255;
+                    //     writePPMGrey("./GUAS_TEST/GUAS_SEPERABLE_CONVOLVE.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
+                    //     cudaDeviceSynchronize();
+                    // }
+                    ////////////TIME GUASSIAN WITH SEPERABLE CUDA IMPLEMENTATION/////////////////////
+                }
+
+                // Average_Time = 0;
+                // printf("Serial, ");
+                // for(int i = 0; i<ITERATIONS; i++)
+                // {
+                //     Average_Time += Serial_Time[i];
+                //     printf("%f, ", Serial_Time[i]);
+                // }
+                // printf("%f\n", Average_Time/ITERATIONS);
+
+                Average_Time = 0;
+                printf("%d, %d, Naive, ", y, x);
+                for(int i = 0; i<ITERATIONS; i++)
+                {
+                    Average_Time += Naive_Time[i];
+                    printf("%f, ", Naive_Time[i]);
+                }
+                printf("%f\n", Average_Time/ITERATIONS);
+
+                Average_Time = 0;
+                printf("%d, %d, Horizontal Seperable, "y, x);
+                for(int i = 0; i<ITERATIONS; i++)
+                {
+                    Average_Time += Horizontal_Seperable_Time[i];
+                    printf("%f, ", Horizontal_Seperable_Time[i]);
+                }
+                printf("%f\n", Average_Time/ITERATIONS);
+
+                Average_Time = 0;
+                printf("%d, %d, Vertical Seperable, "y, x);
+                for(int i = 0; i<ITERATIONS; i++)
+                {
+                    Average_Time += Vertical_Seperable_Time[i];
+                    printf("%f, ", Vertical_Seperable_Time[i]);
+                }
+                printf("%f\n", Average_Time/ITERATIONS);
+            }
         }
-        printf("%f\n", Average_Time/ITERATIONS);
 
         //************************* CLEAN UP *****************************//
         // 

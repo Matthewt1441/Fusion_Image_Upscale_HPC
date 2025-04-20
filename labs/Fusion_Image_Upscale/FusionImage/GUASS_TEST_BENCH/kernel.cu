@@ -825,7 +825,7 @@ __global__ void GuassianBlur_Threshold_Map_Naive_Kernel(float* blur_map, float* 
     int Row = blockIdx.y * blockDim.y + threadIdx.y;
     int Col = blockIdx.x * blockDim.x + threadIdx.x;
 
-    float M_PI = 3.14;
+    float my_PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164062;;
 
     if (Row < height && Col < width)
     {
@@ -834,7 +834,7 @@ __global__ void GuassianBlur_Threshold_Map_Naive_Kernel(float* blur_map, float* 
             for (int x = 0; x < kernel_size; x++)
             {
                 double exponent = -((x - kernel_center) * (x - kernel_center) - (y - kernel_center) * (y - kernel_center)) / (2 * sigma * sigma);
-                guassian_kernel[y * kernel_size + x] = exp(exponent) / (2 * M_PI * sigma * sigma);
+                guassian_kernel[y * kernel_size + x] = exp(exponent) / (2 * my_PI * sigma * sigma);
                 sum += guassian_kernel[y * kernel_size + x];
             }
         }

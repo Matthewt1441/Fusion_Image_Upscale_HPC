@@ -47,6 +47,7 @@ int main(int argc, char* argv[])
     unsigned char*      d_big_img_bic_grey;                 //Upscaled Greyscale Bicubic Image
     float*              d_big_artifact_map;                 //Upscaled Artifact Map for image fusion
     float*              d_big_blurred_artifact_map;         //Upscaled Blurred Artifact Map for image fusion
+    float*              d_big_blurred_artifact_map_inter;   //Upscaled Blurred Artifact Map for image fusion
     RGBA_t*             d_big_rgba_img_fused;               //Upscaled Fused Image w/ 32bit-pixel format
     unsigned char*      d_big_img_fused;                    //Upscaled Fused Image  
     
@@ -122,6 +123,8 @@ int main(int argc, char* argv[])
         //Maps for Fusion
         if (cudaMalloc((void**)&d_big_artifact_map, big_width * big_height * sizeof(float)) != cudaSuccess)
             fprintf(stderr, "Artifact Map Failed to Malloc: %s\n", cudaGetErrorString(cudaStatus));
+        if (cudaMalloc((void**)&d_big_blurred_artifact_map_inter, big_width * big_height * sizeof(float)) != cudaSuccess)
+            fprintf(stderr, "Intermediate Blured Artifact Map Failed to Malloc: %s\n", cudaGetErrorString(cudaStatus));
         if (cudaMalloc((void**)&d_big_blurred_artifact_map, big_width * big_height * sizeof(float)) != cudaSuccess)
             fprintf(stderr, "Blured Artifact Map Failed to Malloc: %s\n", cudaGetErrorString(cudaStatus));
 
@@ -129,7 +132,7 @@ int main(int argc, char* argv[])
         if (cudaMalloc((void**)&d_big_img_fused, big_width * big_height * sizeof(unsigned char) * 3) != cudaSuccess)
             fprintf(stderr, "Fused Image Failed to Malloc: %s\n", cudaGetErrorString(cudaStatus));
         if (cudaMalloc((void**)&d_big_rgba_img_fused, big_width * big_height * sizeof(RGBA_t)) != cudaSuccess)
-            fprintf(stderr, "Fused Image Failed to Malloc: %s\n", cudaGetErrorString(cudaStatus));
+            fprintf(stderr, "RGBA Fused Image Failed to Malloc: %s\n", cudaGetErrorString(cudaStatus));
         //******** Malloc Device Images ********//
 
         dim3 RGB_Block(256);
@@ -251,11 +254,11 @@ int main(int argc, char* argv[])
 
             ////////////TIME GUASSIAN WITH SEPERABLE CUDA IMPLEMENTATION/////////////////////
             cudaEventRecord(astartEvent1, 0);
-            horizontalGuassianBlurConvolve  <<< h_Guas_Grid, h_Guas_Block, sizeof(float) * (h_Guas_Block.x + GUAS_Ksize - 1) * h_Guas_Block.y >>>(d_big_blurred_artifact_map, d_big_artifact_map, big_width, big_height, GUAS_Ksize);
+            horizontalGuassianBlurConvolve  <<< h_Guas_Grid, h_Guas_Block, sizeof(float) * (h_Guas_Block.x + GUAS_Ksize - 1) * h_Guas_Block.y >>>(d_big_blurred_artifact_map_inter, d_big_artifact_map, big_width, big_height, GUAS_Ksize);
             cudaEventRecord(astopEvent1, 0);
     
             cudaEventRecord(astartEvent2, 0);
-            verticalGuassianBlurConvolve    <<< v_Guas_Grid, v_Guas_Block, sizeof(float) * (v_Guas_Block.y + GUAS_Ksize - 1) * v_Guas_Block.x >>>(d_big_blurred_artifact_map, d_big_blurred_artifact_map, big_width, big_height, 0.05, GUAS_Ksize);
+            verticalGuassianBlurConvolve    <<< v_Guas_Grid, v_Guas_Block, sizeof(float) * (v_Guas_Block.y + GUAS_Ksize - 1) * v_Guas_Block.x >>>(d_big_blurred_artifact_map, d_big_blurred_artifact_map_inter, big_width, big_height, 0.05, GUAS_Ksize);
             cudaEventRecord(astopEvent2, 0);
             
             error = cudaGetLastError();
@@ -306,6 +309,7 @@ int main(int argc, char* argv[])
         cudaFree(d_big_img_bic_grey);
         cudaFree(d_big_artifact_map);
         cudaFree(d_big_blurred_artifact_map);
+        cudaFree(d_big_blurred_artifact_map_inter);
         cudaFree(d_big_rgba_img_fused);
         cudaFree(d_big_img_fused);
     }

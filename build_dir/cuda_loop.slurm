@@ -31,7 +31,7 @@
 ###module load cuda11/11.0
 
 ### set directory for job execution, replace the following path with your own path
-hw_path=~kylerm23/ece569/Fusion_Image_Upscale_HPC/build_dir
+hw_path=~matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir
 
 cd $hw_path
 
@@ -55,12 +55,12 @@ SCALES[4]=8;
 for scale in ${SCALES[@]}
 do
   file=cuda_code_NV_$((scale)).txt
-  ./CUDA_TEST_BENCH_Solution $scale ./NV/image "Fallout New Vegas" 1 99 -t vector > Kernel_Testing/$file
+  ./CUDA_TEST_BENCH_Solution $scale ./NV/image "Fallout New Vegas" 1 99 -t vector > Kernel_Testing/CUDA_OUTPUT/$file
 
   file=cuda_code_LAD_$((scale)).txt
-  ./CUDA_TEST_BENCH_Solution $scale ./LAD/LAD_ "LIKE A DRAGON INFINITE WEALTH" 1 99 -t vector > Kernel_Testing/$file
+  ./CUDA_TEST_BENCH_Solution $scale ./LAD/LAD_ "LIKE A DRAGON INFINITE WEALTH" 1 99 -t vector > Kernel_Testing/CUDA_OUTPUT/$file
 
   file=cuda_code_LM_$((scale)).txt
-  ./CUDA_TEST_BENCH_Solution $scale ./LM_Frame/image "LUIGIS MANSION" 1 99 -t vector > Kernel_Testing/$file
+  ./CUDA_TEST_BENCH_Solution $scale ./LM_Frame/image "LUIGIS MANSION" 1 99 -t vector > Kernel_Testing/CUDA_OUTPUT/$file
 
 done

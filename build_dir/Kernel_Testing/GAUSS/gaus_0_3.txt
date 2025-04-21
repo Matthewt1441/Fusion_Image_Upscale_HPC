@@ -1,0 +1,239 @@
+./NV/image1.ppm
+Guassian Blur Test
+Scale Factor, 3
+Input Image Dimensions (x, y), 1920 , 1080
+Output Image Dimensions (x, y), 5760, 3240
+Block_Y, Block_X, Version, Iteration 1, Iteration 2, Iteration 3, Iteration 4, Iteration 5, Average
+1, 1, Naive, 2770.412109, 2770.621826, 2770.774414, 2770.440674, 2770.802246, 2770.610254
+1, 1, Horizontal Seperable, 98.287743, 98.287102, 98.282623, 98.288513, 98.282913, 98.285779
+1, 1, Vertical Seperable, 89.628510, 89.636803, 89.618652, 89.634720, 89.640320, 89.631801
+1, 2, Naive, 1384.418091, 1384.830566, 1384.738892, 1384.786987, 1384.636108, 1384.682129
+1, 2, Horizontal Seperable, 35.603168, 35.591648, 35.604225, 35.603039, 35.615425, 35.603501
+1, 2, Vertical Seperable, 44.969887, 44.970142, 44.963200, 44.984287, 44.966110, 44.970725
+1, 4, Naive, 690.946228, 691.011780, 691.123291, 690.897827, 690.012939, 690.798413
+1, 4, Horizontal Seperable, 15.104288, 15.100672, 15.102912, 15.092384, 15.094080, 15.098867
+1, 4, Vertical Seperable, 25.203039, 25.227615, 25.211967, 25.207169, 25.208609, 25.211680
+1, 8, Naive, 280.228516, 280.375214, 280.358154, 278.124390, 276.559021, 279.129059
+1, 8, Horizontal Seperable, 6.339296, 6.341248, 6.340608, 6.345856, 6.350208, 6.343443
+1, 8, Vertical Seperable, 12.792320, 12.641568, 12.615776, 12.804640, 12.799584, 12.730778
+1, 16, Naive, 141.855133, 139.060898, 141.528229, 138.484711, 140.279770, 140.241748
+1, 16, Horizontal Seperable, 1.976288, 1.977440, 1.978176, 1.978080, 1.976416, 1.977280
+1, 16, Vertical Seperable, 7.683808, 7.707808, 7.697664, 7.701600, 7.724416, 7.703059
+1, 32, Naive, 85.166756, 85.222496, 85.187424, 85.222656, 85.189186, 85.197704
+1, 32, Horizontal Seperable, 0.999712, 1.001376, 1.001760, 1.002016, 0.999552, 1.000883
+1, 32, Vertical Seperable, 3.918592, 3.910528, 3.920384, 3.908096, 3.913440, 3.914208
+1, 64, Naive, 85.700066, 85.765884, 85.733406, 85.749535, 84.816483, 85.553075
+1, 64, Horizontal Seperable, 0.667392, 0.667360, 0.667904, 0.668064, 0.667200, 0.667584
+1, 64, Vertical Seperable, 1.264832, 1.264800, 1.265056, 1.265248, 1.264864, 1.264960
+1, 128, Naive, 84.701218, 84.831390, 84.653313, 84.785858, 85.044029, 84.803162
+1, 128, Horizontal Seperable, 0.640480, 0.640352, 0.640992, 0.639776, 0.640416, 0.640403
+1, 128, Vertical Seperable, 1.268096, 1.268192, 1.267936, 1.268096, 1.267712, 1.268006
+1, 256, Naive, 88.801636, 90.452286, 90.462082, 90.286430, 88.543106, 89.709108
+1, 256, Horizontal Seperable, 0.636480, 0.636352, 0.636320, 0.637952, 0.636960, 0.636813
+1, 256, Vertical Seperable, 1.295200, 1.295552, 1.295296, 1.301216, 1.295968, 1.296646
+1, 512, Naive, 92.715073, 92.586945, 92.612541, 92.681252, 92.530624, 92.625287
+1, 512, Horizontal Seperable, 0.643872, 0.642816, 0.645056, 0.642752, 0.643520, 0.643603
+1, 512, Vertical Seperable, 1.348032, 1.348384, 1.348160, 1.348800, 1.348640, 1.348403
+1, 1024, Naive, 102.797150, 102.872253, 102.791168, 102.812157, 102.822014, 102.818948
+1, 1024, Horizontal Seperable, 0.685120, 0.685216, 0.685952, 0.685376, 0.684896, 0.685312
+1, 1024, Vertical Seperable, 1.373504, 1.373600, 1.373056, 1.373184, 1.373856, 1.373440
+2, 1, Naive, 1384.746704, 1384.877686, 1384.736694, 1384.772339, 1384.877075, 1384.802100
+2, 1, Horizontal Seperable, 49.321472, 49.315392, 49.319809, 49.319839, 49.314976, 49.318298
+2, 1, Vertical Seperable, 32.619808, 32.621761, 32.624802, 32.629410, 32.622753, 32.623707
+2, 2, Naive, 693.715454, 693.741577, 693.705200, 694.025391, 692.031189, 693.443762
+2, 2, Horizontal Seperable, 17.904575, 17.901825, 17.907553, 17.904448, 17.906784, 17.905037
+2, 2, Vertical Seperable, 15.121760, 15.118688, 14.840896, 12.881888, 15.115552, 14.615757
+2, 4, Naive, 279.893250, 279.873688, 279.945892, 278.606506, 278.607910, 279.385449
+2, 4, Horizontal Seperable, 6.339200, 6.341728, 6.348448, 6.347744, 6.345824, 6.344589
+2, 4, Vertical Seperable, 8.841568, 8.840224, 8.848032, 8.849632, 8.849952, 8.845882
+2, 8, Naive, 141.882553, 143.175674, 141.841217, 141.599655, 143.167847, 142.333389
+2, 8, Horizontal Seperable, 1.974112, 1.974560, 1.975136, 1.974944, 1.974720, 1.974694
+2, 8, Vertical Seperable, 4.550048, 4.560096, 4.552352, 4.560640, 4.559840, 4.556595
+2, 16, Naive, 85.066528, 85.064705, 84.986275, 85.078979, 85.021599, 85.043617
+2, 16, Horizontal Seperable, 0.989024, 0.989376, 0.989184, 0.987776, 0.989888, 0.989050
+2, 16, Vertical Seperable, 1.073088, 1.073824, 1.072768, 1.074144, 1.072992, 1.073363
+2, 32, Naive, 85.588737, 85.562561, 85.583969, 86.532097, 86.495682, 85.952609
+2, 32, Horizontal Seperable, 0.736064, 0.735904, 0.736096, 0.736352, 0.735808, 0.736045
+2, 32, Vertical Seperable, 0.945824, 0.945728, 0.945824, 0.945760, 0.945856, 0.945798
+2, 64, Naive, 86.373184, 86.376030, 86.281059, 84.471390, 84.470078, 85.594348
+2, 64, Horizontal Seperable, 0.671584, 0.670368, 0.670144, 0.669888, 0.670432, 0.670483
+2, 64, Vertical Seperable, 0.948320, 0.948160, 0.948480, 0.948448, 0.948576, 0.948397
+2, 128, Naive, 87.766724, 87.805084, 87.710495, 89.772255, 89.746529, 88.560217
+2, 128, Horizontal Seperable, 0.643168, 0.642400, 0.643648, 0.642656, 0.642688, 0.642912
+2, 128, Vertical Seperable, 0.954368, 0.954368, 0.954432, 0.954336, 0.954656, 0.954432
+2, 256, Naive, 93.968895, 93.832642, 91.739998, 94.146622, 94.203171, 93.578265
+2, 256, Horizontal Seperable, 0.648800, 0.647840, 0.647488, 0.647680, 0.648640, 0.648090
+2, 256, Vertical Seperable, 0.979168, 0.979648, 0.979488, 0.979552, 0.979616, 0.979494
+2, 512, Naive, 102.640671, 102.674049, 102.697060, 102.629631, 101.142815, 102.356845
+2, 512, Horizontal Seperable, 0.710784, 0.711136, 0.710560, 0.711104, 0.710784, 0.710874
+2, 512, Vertical Seperable, 1.057856, 1.057536, 1.056928, 1.056800, 1.056768, 1.057178
+2, 1024, NAIVE CUDA error: invalid configuration argument
+4, 1, Naive, 692.322937, 692.408936, 692.377197, 692.537659, 692.523743, 692.434094
+4, 1, Horizontal Seperable, 23.515648, 23.515072, 23.518911, 23.509537, 23.509249, 23.513683
+4, 1, Vertical Seperable, 17.512064, 17.511232, 17.504255, 17.519232, 17.524609, 17.514278
+4, 2, Naive, 279.865204, 279.840942, 278.501434, 277.882843, 277.983490, 278.814783
+4, 2, Horizontal Seperable, 9.018048, 9.022048, 9.030944, 9.028544, 9.045952, 9.029107
+4, 2, Vertical Seperable, 6.340000, 6.341536, 6.353248, 6.347520, 6.361440, 6.348749
+4, 4, Naive, 141.849884, 143.104416, 143.230209, 141.235397, 143.077698, 142.499521
+4, 4, Horizontal Seperable, 1.975008, 1.973760, 1.972416, 1.974528, 1.972352, 1.973613
+4, 4, Vertical Seperable, 4.398752, 3.339136, 4.409408, 4.409152, 3.286848, 3.968659
+4, 8, Naive, 86.964897, 86.863998, 86.901855, 86.851486, 86.891556, 86.894759
+4, 8, Horizontal Seperable, 0.989440, 0.988832, 0.990272, 0.990944, 0.990400, 0.989978
+4, 8, Vertical Seperable, 0.990048, 0.988608, 0.988928, 0.989536, 0.989632, 0.989350
+4, 16, Naive, 88.777855, 88.844444, 88.955971, 88.830910, 88.813377, 88.844511
+4, 16, Horizontal Seperable, 0.737952, 0.737568, 0.737760, 0.737792, 0.737312, 0.737677
+4, 16, Vertical Seperable, 0.784064, 0.784704, 0.784192, 0.784864, 0.784480, 0.784461
+4, 32, Naive, 86.354492, 86.108223, 86.092545, 88.471138, 86.166756, 86.638631
+4, 32, Horizontal Seperable, 0.738176, 0.738080, 0.738720, 0.738048, 0.738656, 0.738336
+4, 32, Vertical Seperable, 0.787136, 0.787168, 0.787232, 0.787168, 0.787104, 0.787162
+4, 64, Naive, 89.434303, 90.376419, 90.370941, 89.323296, 89.322464, 89.765485
+4, 64, Horizontal Seperable, 0.672864, 0.673216, 0.673344, 0.673600, 0.673632, 0.673331
+4, 64, Vertical Seperable, 0.793120, 0.792800, 0.792672, 0.792608, 0.792704, 0.792781
+4, 128, Naive, 93.084381, 88.559105, 93.872322, 93.899773, 92.811523, 92.445421
+4, 128, Horizontal Seperable, 0.665088, 0.665376, 0.664832, 0.665760, 0.664000, 0.665011
+4, 128, Vertical Seperable, 0.806304, 0.806080, 0.806176, 0.806496, 0.806016, 0.806214
+4, 256, Naive, 99.882370, 99.898178, 99.314819, 99.847069, 99.354179, 99.659323
+4, 256, Horizontal Seperable, 0.721440, 0.717408, 0.717376, 0.716704, 0.717824, 0.718150
+4, 256, Vertical Seperable, 0.867392, 0.866560, 0.867136, 0.867040, 0.866880, 0.867002
+4, 512, NAIVE CUDA error: invalid configuration argument
+4, 1024, NAIVE CUDA error: invalid configuration argument
+8, 1, Naive, 280.119446, 280.192047, 277.748444, 277.695557, 274.765900, 278.104279
+8, 1, Horizontal Seperable, 10.590944, 10.067072, 9.440640, 10.617600, 10.647008, 10.272653
+8, 1, Vertical Seperable, 8.203872, 8.748256, 8.722976, 8.744768, 8.759744, 8.635923
+8, 2, Naive, 142.299622, 143.232986, 142.042557, 141.597275, 143.242279, 142.482944
+8, 2, Horizontal Seperable, 4.640800, 4.639968, 4.646304, 4.657440, 4.648608, 4.646624
+8, 2, Vertical Seperable, 4.386176, 4.383456, 4.396000, 4.392960, 3.460992, 4.203917
+8, 4, Naive, 86.956963, 87.039619, 87.024414, 86.957764, 86.987808, 86.993314
+8, 4, Horizontal Seperable, 1.010464, 1.008736, 1.009792, 1.008960, 1.009504, 1.009491
+8, 4, Vertical Seperable, 0.991520, 0.991328, 0.991936, 0.990176, 0.990368, 0.991066
+8, 8, Naive, 89.896996, 89.190590, 87.083969, 89.238304, 89.192833, 88.920538
+8, 8, Horizontal Seperable, 0.737664, 0.737440, 0.738112, 0.737504, 0.737440, 0.737632
+8, 8, Vertical Seperable, 0.737696, 0.737696, 0.737824, 0.737824, 0.737728, 0.737754
+8, 16, Naive, 88.594177, 88.661438, 88.669891, 88.630173, 88.587517, 88.628639
+8, 16, Horizontal Seperable, 0.740352, 0.740256, 0.740128, 0.740352, 0.740032, 0.740224
+8, 16, Vertical Seperable, 0.706624, 0.706816, 0.707008, 0.706720, 0.706752, 0.706784
+8, 32, Naive, 89.314110, 90.462013, 90.453758, 87.879585, 87.743454, 89.170584
+8, 32, Horizontal Seperable, 0.741120, 0.741088, 0.740992, 0.740896, 0.740832, 0.740986
+8, 32, Vertical Seperable, 0.711904, 0.712192, 0.712864, 0.712864, 0.712096, 0.712384
+8, 64, Naive, 86.728767, 93.208000, 92.085312, 91.332672, 93.942627, 91.459476
+8, 64, Horizontal Seperable, 0.688736, 0.687328, 0.687776, 0.688000, 0.687264, 0.687821
+8, 64, Vertical Seperable, 0.725248, 0.725568, 0.725472, 0.724960, 0.725184, 0.725286
+8, 128, Naive, 100.439262, 100.278656, 102.918594, 100.662659, 101.228416, 101.105518
+8, 128, Horizontal Seperable, 0.752320, 0.750848, 0.754752, 0.750752, 0.752320, 0.752198
+8, 128, Vertical Seperable, 0.775200, 0.777536, 0.777472, 0.775904, 0.776320, 0.776486
+8, 256, NAIVE CUDA error: invalid configuration argument
+8, 512, NAIVE CUDA error: invalid configuration argument
+8, 1024, NAIVE CUDA error: invalid configuration argument
+16, 1, Naive, 145.280487, 143.319931, 145.870010, 146.403549, 146.476959, 145.470187
+16, 1, Horizontal Seperable, 9.197408, 9.232704, 9.233856, 9.219808, 9.221056, 9.220966
+16, 1, Vertical Seperable, 4.451520, 4.475840, 4.464448, 3.860512, 4.478048, 4.346074
+16, 2, Naive, 92.837852, 92.877472, 92.817665, 92.704605, 91.585373, 92.564594
+16, 2, Horizontal Seperable, 1.629760, 1.631744, 1.628224, 1.631456, 1.629216, 1.630080
+16, 2, Vertical Seperable, 3.442272, 3.455360, 3.447584, 3.444864, 3.440448, 3.446106
+16, 4, Naive, 87.418686, 87.366402, 87.393791, 87.386559, 89.032318, 87.719551
+16, 4, Horizontal Seperable, 0.893664, 0.893536, 0.893696, 0.893248, 0.892992, 0.893427
+16, 4, Vertical Seperable, 0.686944, 0.687392, 0.686848, 0.686880, 0.686816, 0.686976
+16, 8, Naive, 88.629250, 88.699455, 88.688385, 88.617470, 86.956863, 88.318285
+16, 8, Horizontal Seperable, 0.741088, 0.741216, 0.741216, 0.741248, 0.741472, 0.741248
+16, 8, Vertical Seperable, 0.684192, 0.684224, 0.684096, 0.684224, 0.684032, 0.684154
+16, 16, Naive, 89.712418, 89.641151, 90.446976, 90.506401, 79.089539, 87.879297
+16, 16, Horizontal Seperable, 0.744096, 0.744096, 0.744224, 0.744096, 0.744128, 0.744128
+16, 16, Vertical Seperable, 0.672928, 0.672768, 0.672448, 0.673024, 0.673280, 0.672890
+16, 32, Naive, 90.941597, 91.257919, 94.169250, 92.666077, 90.977570, 92.002483
+16, 32, Horizontal Seperable, 0.750624, 0.750400, 0.749760, 0.750016, 0.749760, 0.750112
+16, 32, Vertical Seperable, 0.687168, 0.687200, 0.687872, 0.687648, 0.687136, 0.687405
+16, 64, Naive, 99.948608, 101.539009, 101.314720, 101.445534, 101.612579, 101.172090
+16, 64, Horizontal Seperable, 0.762400, 0.759872, 0.760768, 0.759456, 0.762112, 0.760922
+16, 64, Vertical Seperable, 0.745728, 0.747040, 0.747008, 0.747712, 0.746144, 0.746726
+16, 128, NAIVE CUDA error: invalid configuration argument
+16, 256, NAIVE CUDA error: invalid configuration argument
+16, 512, NAIVE CUDA error: invalid configuration argument
+16, 1024, NAIVE CUDA error: invalid configuration argument
+32, 1, Naive, 107.045341, 107.874748, 107.805504, 106.479645, 105.940483, 107.029144
+32, 1, Horizontal Seperable, 8.548768, 9.726016, 9.721632, 9.730496, 9.729760, 9.491335
+32, 1, Vertical Seperable, 4.377792, 4.372800, 4.375456, 4.377632, 4.381344, 4.377005
+32, 2, Naive, 96.398369, 96.401344, 96.380898, 98.052414, 98.057602, 97.058125
+32, 2, Horizontal Seperable, 1.653984, 1.653088, 1.654240, 1.655840, 1.654976, 1.654426
+32, 2, Vertical Seperable, 3.435232, 3.431840, 3.408128, 3.424288, 3.419776, 3.423853
+32, 4, Naive, 89.111298, 89.152573, 89.137535, 87.480446, 90.010468, 88.978464
+32, 4, Horizontal Seperable, 0.908608, 0.907200, 0.907360, 0.908416, 0.909568, 0.908230
+32, 4, Vertical Seperable, 0.665312, 0.665664, 0.665888, 0.665120, 0.666080, 0.665613
+32, 8, Naive, 89.836319, 89.529663, 87.773827, 77.308189, 89.909348, 86.871469
+32, 8, Horizontal Seperable, 0.746848, 0.746944, 0.747392, 0.746688, 0.746880, 0.746950
+32, 8, Vertical Seperable, 0.665664, 0.665696, 0.665216, 0.665344, 0.665504, 0.665485
+32, 16, Naive, 92.902756, 91.974495, 92.207268, 93.553886, 92.920830, 92.711847
+32, 16, Horizontal Seperable, 0.755744, 0.756288, 0.755584, 0.755968, 0.755680, 0.755853
+32, 16, Vertical Seperable, 0.671968, 0.671936, 0.671680, 0.671712, 0.671840, 0.671827
+32, 32, Naive, 101.016319, 101.525246, 101.396385, 101.674622, 101.520798, 101.426674
+32, 32, Horizontal Seperable, 0.813440, 0.812736, 0.811392, 0.811456, 0.810880, 0.811981
+32, 32, Vertical Seperable, 0.734144, 0.734656, 0.734304, 0.734432, 0.734912, 0.734490
+32, 64, NAIVE CUDA error: invalid configuration argument
+32, 128, NAIVE CUDA error: invalid configuration argument
+32, 256, NAIVE CUDA error: invalid configuration argument
+32, 512, NAIVE CUDA error: invalid configuration argument
+32, 1024, NAIVE CUDA error: invalid configuration argument
+64, 1, Naive, 116.191811, 116.260162, 113.932541, 116.062431, 115.187393, 115.526868
+64, 1, Horizontal Seperable, 9.787744, 9.794432, 9.791296, 9.764640, 9.766976, 9.781017
+64, 1, Vertical Seperable, 4.257536, 4.257088, 4.269216, 4.247392, 4.238112, 4.253869
+64, 2, Naive, 98.041985, 95.858849, 95.919708, 96.393059, 96.429245, 96.528569
+64, 2, Horizontal Seperable, 1.694528, 1.693536, 1.693440, 1.692768, 1.693600, 1.693574
+64, 2, Vertical Seperable, 2.690240, 3.474848, 3.437280, 3.475648, 3.443200, 3.304243
+64, 4, Naive, 88.548096, 90.806435, 90.213600, 75.573311, 107.852417, 90.598772
+64, 4, Horizontal Seperable, 0.915008, 0.914624, 0.914976, 0.915008, 0.917984, 0.915520
+64, 4, Vertical Seperable, 0.660928, 0.660736, 0.660384, 0.661632, 0.663232, 0.661382
+64, 8, Naive, 44.586399, 42.789505, 45.026176, 47.807522, 94.419838, 54.925888
+64, 8, Horizontal Seperable, 0.761408, 0.781824, 0.759584, 0.758272, 0.758912, 0.764000
+64, 8, Vertical Seperable, 0.676640, 0.677152, 0.677984, 0.678816, 0.678080, 0.677734
+64, 16, Naive, 103.077438, 102.935234, 103.005379, 103.101341, 103.124771, 103.048833
+64, 16, Horizontal Seperable, 0.810528, 0.811136, 0.810592, 0.810464, 0.810240, 0.810592
+64, 16, Vertical Seperable, 0.732768, 0.731968, 0.733120, 0.732512, 0.732192, 0.732512
+64, 32, NAIVE CUDA error: invalid configuration argument
+64, 64, NAIVE CUDA error: invalid configuration argument
+64, 128, NAIVE CUDA error: invalid configuration argument
+64, 256, NAIVE CUDA error: invalid configuration argument
+64, 512, NAIVE CUDA error: invalid configuration argument
+64, 1024, NAIVE CUDA error: invalid configuration argument
+128, 1, NAIVE CUDA error: an illegal memory access was encountered
+128, 2, NAIVE CUDA error: an illegal memory access was encountered
+128, 4, NAIVE CUDA error: an illegal memory access was encountered
+128, 8, NAIVE CUDA error: an illegal memory access was encountered
+128, 16, NAIVE CUDA error: an illegal memory access was encountered
+128, 32, NAIVE CUDA error: an illegal memory access was encountered
+128, 64, NAIVE CUDA error: an illegal memory access was encountered
+128, 128, NAIVE CUDA error: an illegal memory access was encountered
+128, 256, NAIVE CUDA error: an illegal memory access was encountered
+128, 512, NAIVE CUDA error: an illegal memory access was encountered
+128, 1024, NAIVE CUDA error: an illegal memory access was encountered
+256, 1, NAIVE CUDA error: an illegal memory access was encountered
+256, 2, NAIVE CUDA error: an illegal memory access was encountered
+256, 4, NAIVE CUDA error: an illegal memory access was encountered
+256, 8, NAIVE CUDA error: an illegal memory access was encountered
+256, 16, NAIVE CUDA error: an illegal memory access was encountered
+256, 32, NAIVE CUDA error: an illegal memory access was encountered
+256, 64, NAIVE CUDA error: an illegal memory access was encountered
+256, 128, NAIVE CUDA error: an illegal memory access was encountered
+256, 256, NAIVE CUDA error: an illegal memory access was encountered
+256, 512, NAIVE CUDA error: an illegal memory access was encountered
+256, 1024, NAIVE CUDA error: an illegal memory access was encountered
+512, 1, NAIVE CUDA error: an illegal memory access was encountered
+512, 2, NAIVE CUDA error: an illegal memory access was encountered
+512, 4, NAIVE CUDA error: an illegal memory access was encountered
+512, 8, NAIVE CUDA error: an illegal memory access was encountered
+512, 16, NAIVE CUDA error: an illegal memory access was encountered
+512, 32, NAIVE CUDA error: an illegal memory access was encountered
+512, 64, NAIVE CUDA error: an illegal memory access was encountered
+512, 128, NAIVE CUDA error: an illegal memory access was encountered
+512, 256, NAIVE CUDA error: an illegal memory access was encountered
+512, 512, NAIVE CUDA error: an illegal memory access was encountered
+512, 1024, NAIVE CUDA error: an illegal memory access was encountered
+1024, 1, NAIVE CUDA error: an illegal memory access was encountered
+1024, 2, NAIVE CUDA error: an illegal memory access was encountered
+1024, 4, NAIVE CUDA error: an illegal memory access was encountered
+1024, 8, NAIVE CUDA error: an illegal memory access was encountered
+1024, 16, NAIVE CUDA error: an illegal memory access was encountered
+1024, 32, NAIVE CUDA error: an illegal memory access was encountered
+1024, 64, NAIVE CUDA error: an illegal memory access was encountered
+1024, 128, NAIVE CUDA error: an illegal memory access was encountered
+1024, 256, NAIVE CUDA error: an illegal memory access was encountered
+1024, 512, NAIVE CUDA error: an illegal memory access was encountered
+1024, 1024, NAIVE CUDA error: an illegal memory access was encountered

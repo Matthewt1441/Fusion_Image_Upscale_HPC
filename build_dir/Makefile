@@ -117,30 +117,30 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named GUAS_TEST_BENCH_Solution
+# Target rules for targets named CUDA_TEST_BENCH_TOGETHER_Solution
 
 # Build rule for target.
-GUAS_TEST_BENCH_Solution: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 GUAS_TEST_BENCH_Solution
-.PHONY : GUAS_TEST_BENCH_Solution
+CUDA_TEST_BENCH_TOGETHER_Solution: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CUDA_TEST_BENCH_TOGETHER_Solution
+.PHONY : CUDA_TEST_BENCH_TOGETHER_Solution
 
 # fast build rule for target.
-GUAS_TEST_BENCH_Solution/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/GUAS_TEST_BENCH_Solution.dir/build.make CMakeFiles/GUAS_TEST_BENCH_Solution.dir/build
-.PHONY : GUAS_TEST_BENCH_Solution/fast
+CUDA_TEST_BENCH_TOGETHER_Solution/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CUDA_TEST_BENCH_TOGETHER_Solution.dir/build.make CMakeFiles/CUDA_TEST_BENCH_TOGETHER_Solution.dir/build
+.PHONY : CUDA_TEST_BENCH_TOGETHER_Solution/fast
 
 #=============================================================================
-# Target rules for targets named BIC_TEST_BENCH2_Solution
+# Target rules for targets named CUDA_TEST_BENCH_INDIVIDUALLY_Solution
 
 # Build rule for target.
-BIC_TEST_BENCH2_Solution: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 BIC_TEST_BENCH2_Solution
-.PHONY : BIC_TEST_BENCH2_Solution
+CUDA_TEST_BENCH_INDIVIDUALLY_Solution: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CUDA_TEST_BENCH_INDIVIDUALLY_Solution
+.PHONY : CUDA_TEST_BENCH_INDIVIDUALLY_Solution
 
 # fast build rule for target.
-BIC_TEST_BENCH2_Solution/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BIC_TEST_BENCH2_Solution.dir/build.make CMakeFiles/BIC_TEST_BENCH2_Solution.dir/build
-.PHONY : BIC_TEST_BENCH2_Solution/fast
+CUDA_TEST_BENCH_INDIVIDUALLY_Solution/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CUDA_TEST_BENCH_INDIVIDUALLY_Solution.dir/build.make CMakeFiles/CUDA_TEST_BENCH_INDIVIDUALLY_Solution.dir/build
+.PHONY : CUDA_TEST_BENCH_INDIVIDUALLY_Solution/fast
 
 # Help Target
 help:
@@ -150,8 +150,8 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... BIC_TEST_BENCH2_Solution"
-	@echo "... GUAS_TEST_BENCH_Solution"
+	@echo "... CUDA_TEST_BENCH_INDIVIDUALLY_Solution"
+	@echo "... CUDA_TEST_BENCH_TOGETHER_Solution"
 .PHONY : help
 
 

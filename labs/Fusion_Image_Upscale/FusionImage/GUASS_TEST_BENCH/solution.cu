@@ -370,6 +370,8 @@ int main(int argc, char* argv[])
                     printf("%f, ", Vertical_Seperable_Time[i]);
                 }
                 printf("%f\n", Average_Time/ITERATIONS);
+
+END_OF_LOOP:
             }
         }
 

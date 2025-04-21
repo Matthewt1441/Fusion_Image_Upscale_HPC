@@ -154,6 +154,18 @@ int main(int argc, char* argv[])
         //Variables for timing
         cudaEvent_t total_Time_Start, total_Time_End, one_Frame_Start, one_Frame_End, compute_Frame_Start, compute_Frame_End;
 
+        cudaEvent_t RGB_2_RGBA_Start, NN_Start, BIC_Start, Artifact_Start, H_Gauss_Start, V_Gauss_Start, Fusion_Start, RGBA_2_RGB_Start;
+        cudaEvent_t RGB_2_RGBA_End, NN_End, BIC_End, Artifact_End, H_Gauss_End, V_Gauss_End, Fusion_End, RGBA_2_RGB_End;
+
+        cudaEventCreate(&RGB_2_RGBA_Start);         cudaEventCreate(&RGB_2_RGBA_End); 
+        cudaEventCreate(&NN_Start);                 cudaEventCreate(&NN_End);   
+        cudaEventCreate(&BIC_Start);                cudaEventCreate(&BIC_End);   
+        cudaEventCreate(&Artifact_Start);           cudaEventCreate(&Artifact_End);   
+        cudaEventCreate(&H_Gauss_Start);            cudaEventCreate(&H_Gauss_End);   
+        cudaEventCreate(&V_Gauss_Start);            cudaEventCreate(&V_Gauss_End);   
+        cudaEventCreate(&Fusion_Start);             cudaEventCreate(&Fusion_End);   
+        cudaEventCreate(&RGBA_2_RGB_Start);         cudaEventCreate(&RGBA_2_RGB_End);   
+
         cudaEventCreate(&total_Time_Start);         cudaEventCreate(&total_Time_End);        
         cudaEventCreate(&one_Frame_Start);          cudaEventCreate(&one_Frame_End);
         cudaEventCreate(&compute_Frame_Start);      cudaEventCreate(&compute_Frame_End);
@@ -190,8 +202,10 @@ int main(int argc, char* argv[])
 
             //PHASE 1 : Image Pre-Processing
             cudaEventRecord(compute_Frame_Start, 0);    //BEGIN COMPUTATION FRAME TIMING
-                                                        //Convert original image to RGBA image
+
+            cudaEventRecord(RGB_2_RGBA_Start);          //Convert original image to RGBA image
             rgbToRGBA_Kernel << < RGB_Grid, RGB_Block, rgbToRGBA_Shared_Mem_Size >> > (d_RGBA_img, d_img, width * height);
+            cudaEventRecord(RGB_2_RGBA_End);
             //cudaDeviceSynchronize();
 
             // error = cudaGetLastError();
@@ -203,10 +217,16 @@ int main(int argc, char* argv[])
             // }
 
             //PHASE 2 : Image Scaling
+                       
+            cudaEventRecord(NN_Start);
             nearestNeighbors_GreyCon_Kernel_RGBA                    <<< NN_Grid, NN_Block >>>                                   
                                 (d_big_img_nn, d_big_img_nn_grey, d_RGBA_img, big_width, big_height, width, height, scale);
+            cudaEventRecord(NN_End);
+
+            cudaEventRecord(BIC_Start);
             bicubicInterpolation_Shared_Memory_GreyCon_Kernel_RGBA  <<< BiCubic_Grid, BiCubic_Block, BiCubic_Shared_Mem_Size >>>
                                 (d_big_img_bic, d_big_img_bic_grey, d_RGBA_img, big_width, big_height, width, height, scale);
+            cudaEventRecord(BIC_End);
             //cudaDeviceSynchronize();
 
             // error = cudaGetLastError();
@@ -218,8 +238,10 @@ int main(int argc, char* argv[])
             // }
 
             //PHASE 3 : Image Artifact Detection
+            cudaEventRecord(Artifact_Start);
             Artifact_Shared_Memory_Kernel                           <<< Arti_Grid, Arti_Block, Arti_Shared_Mem_Size >>>         
                                 (d_big_artifact_map, d_big_img_nn_grey, d_big_img_bic_grey, big_width, big_height);
+            cudaEventRecord(Artifact_End);
 
             // cudaDeviceSynchronize();
 
@@ -232,8 +254,10 @@ int main(int argc, char* argv[])
             // }
 
             //PHASE 4 : Artifact Map Post Processing
+            cudaEventRecord(H_Gauss_Start);
             horizontalGuassianBlurConvolve  <<< h_Guas_Grid, h_Guas_Block, sizeof(float) * (h_Guas_Block.x + GUAS_Ksize - 1) * h_Guas_Block.y >>>
                                 (d_big_blurred_artifact_map_inter, d_big_artifact_map, big_width, big_height, GUAS_Ksize);
+            cudaEventRecord(H_Gauss_End);                                
  
             // cudaDeviceSynchronize();
 
@@ -244,9 +268,10 @@ int main(int argc, char* argv[])
             //     printf("HORIZONTAL GAUSS CUDA error: %s\n", cudaGetErrorString(error));
             //     exit(-1);
             // }
-
+            cudaEventRecord(V_Gauss_Start);
             verticalGuassianBlurConvolve    <<< v_Guas_Grid, v_Guas_Block, sizeof(float) * (v_Guas_Block.y + GUAS_Ksize - 1) * v_Guas_Block.x >>>
                                 (d_big_blurred_artifact_map, d_big_blurred_artifact_map_inter, big_width, big_height, 0.05, GUAS_Ksize);
+            cudaEventRecord(V_Gauss_End);
             
             // cudaDeviceSynchronize();
             
@@ -260,8 +285,10 @@ int main(int argc, char* argv[])
 
 
             //PHASE 5 : Image Fusion
+            cudaEventRecord(Fusion_Start);
             Image_Fusion_Kernel_RGBA <<< RGB_Grid, RGB_Block >>>            
                                 (d_big_rgba_img_fused       , d_big_img_nn, d_big_img_bic   , d_big_blurred_artifact_map, big_width, big_height);
+            cudaEventRecord(Fusion_End);
 
             // cudaDeviceSynchronize();
             
@@ -274,7 +301,10 @@ int main(int argc, char* argv[])
             // }
 
             //PHASE 6 : Image Post Processing -> Convert Into Original Data Type
+            cudaEventRecord(RGBA_2_RGB_Start);
             rgbaToRGB_Kernel <<< RGB_Grid, RGB_Block, rgbaToRGB_Shared_Mem_Size>>> (d_big_img_fused, d_big_rgba_img_fused, big_width * big_height);
+            cudaEventRecord(RGBA_2_RGB_End);
+
             cudaEventRecord(compute_Frame_End, 0);
             cudaEventSynchronize(compute_Frame_End);
             
@@ -290,8 +320,43 @@ int main(int argc, char* argv[])
             cudaDeviceSynchronize();
             cudaMemcpy(h_big_img_fused, d_big_img_fused, sizeof(unsigned char) * big_width * big_height * 3, cudaMemcpyDeviceToHost);
             cudaEventRecord(one_Frame_End, 0);
-            cudaEventSynchronize(one_Frame_End);
+
+            //Print Out Execution time for each kernel.
+            printf("CUDA CODE COMPUTE: FRAME, %d, ", current_frame);
             
+            cudaEventSynchronize(RGB_2_RGBA_End);
+            cudaEventElapsedTime(&processing_time, RGB_2_RGBA_Start, RGB_2_RGBA_End);
+            printf("rgb2RGBA TIME, %f, ms, ", processing_time);
+
+            cudaEventSynchronize(NN_End);
+            cudaEventElapsedTime(&processing_time, NN_Start, NN_End);
+            printf("NN TIME, %f, ms, ", processing_time);
+
+            cudaEventSynchronize(BIC_End);
+            cudaEventElapsedTime(&processing_time, BIC_Start, BIC_End);
+            printf("BIC TIME, %f, ms, ", processing_time);
+
+            cudaEventSynchronize(Artifact_End);
+            cudaEventElapsedTime(&processing_time, Artifact_Start, Artifact_End);
+            printf("ARTIFACT TIME, %f, ms, ", processing_time);
+
+            cudaEventSynchronize(H_Gauss_End);
+            cudaEventElapsedTime(&processing_time, H_Gauss_Start, H_Gauss_End);
+            printf("H_GAUSS TIME, %f, ms, ", processing_time);
+
+            cudaEventSynchronize(V_Gauss_End);
+            cudaEventElapsedTime(&processing_time, V_Gauss_Start, V_Gauss_End);
+            printf("V_GAUSS TIME, %f, ms, ", processing_time);
+
+            cudaEventSynchronize(Fusion_End);
+            cudaEventElapsedTime(&processing_time, Fusion_Start, Fusion_End);
+            printf("FUSION TIME, %f, ms, ", processing_time);
+
+            cudaEventSynchronize(RGBA_2_RGB_End);
+            cudaEventElapsedTime(&processing_time, RGBA_2_RGB_Start, RGBA_2_RGB_End);
+            printf("rgba2RGB TIME, %f, ms, ", processing_time);            
+
+            cudaEventSynchronize(one_Frame_End);            
             cudaEventElapsedTime(&processing_time, compute_Frame_Start, compute_Frame_End);
 
             execution_time_ms = processing_time;
@@ -300,7 +365,7 @@ int main(int argc, char* argv[])
             average_execution_time_compute += execution_time_s;
             average_fps = 1/(average_execution_time_compute / (current_frame - start_frame + 1));
 
-            printf("CUDA CODE COMPUTE: FRAME, %d, TIME, %f, ms, CURRENT FPS, %f, AVERAGE FPS, %f\n", current_frame, execution_time_ms, current_fps, average_fps);
+            printf("TOTAL TIME, %f, ms, CURRENT FPS, %f, AVERAGE FPS, %f\n", execution_time_ms, current_fps, average_fps);
 
             cudaEventElapsedTime(&processing_time, one_Frame_Start, one_Frame_End);
             execution_time_ms = processing_time;
@@ -328,7 +393,7 @@ int main(int argc, char* argv[])
 
         memset(file_address, 0, sizeof(file_address));
 
-        strcat(file_address, "./CUDA_OUTPUT/FUSED_"); 
+        strcat(file_address, "./CUDA_OUTPUT_INDIVIDUALLY/FUSED_"); 
 
         sprintf(file_name, "Scale_%d_Game_%s", scale, game_name);
 

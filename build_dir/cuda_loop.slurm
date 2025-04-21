@@ -55,12 +55,25 @@ SCALES[4]=8;
 for scale in ${SCALES[@]}
 do
   file=cuda_code_NV_$((scale)).txt
-  ./CUDA_TEST_BENCH_Solution $scale ./NV/image "Fallout New Vegas" 1 99 -t vector > Kernel_Testing/CUDA_OUTPUT/$file
+  ./CUDA_TEST_BENCH_INDIVIDUALLY_Solution $scale ./NV/image "Fallout New Vegas" 1 99 -t vector > Kernel_Testing/CUDA_OUTPUT_INDIVIDUALLY/$file
 
   file=cuda_code_LAD_$((scale)).txt
-  ./CUDA_TEST_BENCH_Solution $scale ./LAD/LAD_ "LIKE A DRAGON INFINITE WEALTH" 1 99 -t vector > Kernel_Testing/CUDA_OUTPUT/$file
+  ./CUDA_TEST_BENCH_INDIVIDUALLY_Solution $scale ./LAD/LAD_ "LIKE A DRAGON INFINITE WEALTH" 1 99 -t vector > Kernel_Testing/CUDA_OUTPUT_INDIVIDUALLY/$file
 
   file=cuda_code_LM_$((scale)).txt
-  ./CUDA_TEST_BENCH_Solution $scale ./LM_Frame/image "LUIGIS MANSION" 1 99 -t vector > Kernel_Testing/CUDA_OUTPUT/$file
+  ./CUDA_TEST_BENCH_INDIVIDUALLY_Solution $scale ./LM_Frame/image "LUIGIS MANSION" 1 99 -t vector > Kernel_Testing/CUDA_OUTPUT_INDIVIDUALLY/$file
+
+done
+
+for scale in ${SCALES[@]}
+do
+  file=cuda_code_NV_$((scale)).txt
+  ./CUDA_TEST_BENCH_TOGETHER_Solution $scale ./NV/image "Fallout New Vegas" 1 99 -t vector > Kernel_Testing/CUDA_OUTPUT_TOGETHER/$file
+
+  file=cuda_code_LAD_$((scale)).txt
+  ./CUDA_TEST_BENCH_TOGETHER_Solution $scale ./LAD/LAD_ "LIKE A DRAGON INFINITE WEALTH" 1 99 -t vector > Kernel_Testing/CUDA_OUTPUT_TOGETHER/$file
+
+  file=cuda_code_LM_$((scale)).txt
+  ./CUDA_TEST_BENCH_TOGETHER_Solution $scale ./LM_Frame/image "LUIGIS MANSION" 1 99 -t vector > Kernel_Testing/CUDA_OUTPUT_TOGETHER/$file
 
 done

@@ -37,17 +37,17 @@ cd $hw_path
 
 
 GAMES[0]=./NV/image;
-# GAMES[1]=./LAD/LAD_;
-# GAMES[2]=./LM_Frame/image;
+GAMES[1]=./LAD/LAD_;
+GAMES[2]=./LM_Frame/image;
 
 GAME_COUNT=0;
 
 SCALES[0]=2;
-# SCALES[1]=3;
-# SCALES[2]=4;
-# SCALES[3]=6;
-# SCALES[4]=8;
-# SCALES[5]=10;
+SCALES[1]=3;
+SCALES[2]=4;
+SCALES[3]=6;
+SCALES[4]=8;
+SCALES[5]=10;
 
 DIM_X[0]=1;
 DIM_X[1]=2;
@@ -79,14 +79,14 @@ for game in ${GAMES[@]}
 do
    for scale in ${SCALES[@]}
     do
-        for block_dim_y in ${DIM_Y[@]}
-        do
-            for block_dim_x in ${DIM_X[@]}
-            do
-                file=gaus_$((GAME_COUNT))_$((scale))_$((block_dim_y))_$((block_dim_x)).txt
-                ./GUAS_TEST_BENCH_Solution $scale $block_dim_y $block_dim_x $game -t vector > Kernel_Testing/GAUSS/$file
-            done
-        done
+        # for block_dim_y in ${DIM_Y[@]}
+        # do
+        #     for block_dim_x in ${DIM_X[@]}
+        #     do
+                file=gaus_$((GAME_COUNT))_$((scale)).txt
+                ./GUAS_TEST_BENCH_Solution $scale $game -t vector > Kernel_Testing/GAUSS/$file
+        #     done
+        # done
     done
     GAME_COUNT=$((GAME_COUNT+1))
 done

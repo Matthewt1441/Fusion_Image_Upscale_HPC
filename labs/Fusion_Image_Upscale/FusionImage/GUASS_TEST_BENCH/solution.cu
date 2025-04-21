@@ -255,17 +255,18 @@ int main(int argc, char* argv[])
                     GuassianBlur_Threshold_Map_Naive_Kernel <<< Gaus_Naive_Grid, Gaus_Naive_Block >>>   (d_big_blurred_artifact_map , d_big_artifact_map, big_width, big_height, 3, 1.5, 0.05);
                     cudaEventRecord(astopEvent1, 0);
                     
+                    cudaDeviceSynchronize();
                     error = cudaGetLastError();
                     if(error != cudaSuccess)
                     {
                         // print the CUDA error message and exit
-                        Naive_Time[i] = -1.0;
-                        //printf("NAIVE CUDA error: %s\n", cudaGetErrorString(error));
+                        //Naive_Time[i] = -1.0;
+                        printf("%d, %d, NAIVE CUDA error: %s\n", y, x, cudaGetErrorString(error));
+                        goto END_OF_LOOP;
                         //exit(-1);
                     }
                     else
                     {
-                        cudaDeviceSynchronize();
                         cudaEventSynchronize(astopEvent1);
                         cudaEventElapsedTime(&aelapsedTime1, astartEvent1, astopEvent1);
                         Naive_Time[i] = aelapsedTime1;
@@ -300,9 +301,10 @@ int main(int argc, char* argv[])
                     if(error != cudaSuccess)
                     {
                         // print the CUDA error message and exit
-                        Horizontal_Seperable_Time[i] = -1.0;
-                        Vertical_Seperable_Time[i] = -1.0;
-                        //printf("SEPERABLE CUDA error: %s\n", cudaGetErrorString(error));
+                        //Horizontal_Seperable_Time[i] = -1.0;
+                        //Vertical_Seperable_Time[i] = -1.0;
+                        printf("%d, %d, SEPERABLE CUDA error: %s\n", y, x, cudaGetErrorString(error));
+                        goto END_OF_LOOP;
                         //exit(-1);
                     }
                     else

@@ -825,7 +825,7 @@ __global__ void GuassianBlur_Threshold_Map_Naive_Kernel(float* blur_map, float* 
     int Row = blockIdx.y * blockDim.y + threadIdx.y;
     int Col = blockIdx.x * blockDim.x + threadIdx.x;
 
-    float my_PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164062;;
+    float my_PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164062;
 
     if (Row < height && Col < width)
     {
@@ -854,11 +854,13 @@ __global__ void GuassianBlur_Threshold_Map_Naive_Kernel(float* blur_map, float* 
 
                 //If we are within the image
                 if (map_x >= 0 && map_x < width && map_y >= 0 && map_y < height) {
+                    //printf("map_x %d, map_y %d\n", map_x, map_y);
                     sum += input_map[map_y * width + map_x] * guassian_kernel[i * kernel_size + j];
                 }
             }
         }
 
+        __syncthreads();
         blur_map[Row * width + Col] = (sum > threshold) ? 1.0 : 0.0;
     }
 }

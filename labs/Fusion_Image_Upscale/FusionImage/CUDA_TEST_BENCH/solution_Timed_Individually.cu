@@ -140,13 +140,13 @@ int main(int argc, char* argv[])
         dim3 Arti_Grid(((big_width - 1) / Arti_Block.x) + 1, ((big_height - 1) / Arti_Block.y) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
         int  Arti_Shared_Mem_Size = sizeof(float) * 2 * 8 * 8;
 
-        //Setup Guassian Blur based on passed in Args
-        int GUAS_Ksize = 7;
-        float GUAS_Sigma = 1.5;
-        dim3 h_Guas_Block(256, 1);
-        dim3 h_Guas_Grid(((big_width - 1) / h_Guas_Block.x) + 1, ((big_height - 1) / h_Guas_Block.y) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
-        dim3 v_Guas_Block(8, 32);
-        dim3 v_Guas_Grid(((big_width - 1) / v_Guas_Block.x) + 1, ((big_height - 1) / v_Guas_Block.y) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
+        //Setup Gaussian Blur based on passed in Args
+        int GAUSS_Ksize = 7;
+        float GAUSS_Sigma = 1.5;
+        dim3 h_Gauss_Block(256, 1);
+        dim3 h_Gauss_Grid(((big_width - 1) / h_Gauss_Block.x) + 1, ((big_height - 1) / h_Gauss_Block.y) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
+        dim3 v_Gauss_Block(8, 32);
+        dim3 v_Gauss_Grid(((big_width - 1) / v_Gauss_Block.x) + 1, ((big_height - 1) / v_Gauss_Block.y) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
 
         cudaError_t error;
         //**************** Setup Kernel ****************//
@@ -255,8 +255,8 @@ int main(int argc, char* argv[])
 
             //PHASE 4 : Artifact Map Post Processing
             cudaEventRecord(H_Gauss_Start);
-            horizontalGuassianBlurConvolve  <<< h_Guas_Grid, h_Guas_Block, sizeof(float) * (h_Guas_Block.x + GUAS_Ksize - 1) * h_Guas_Block.y >>>
-                                (d_big_blurred_artifact_map_inter, d_big_artifact_map, big_width, big_height, GUAS_Ksize);
+            horizontalGaussianBlurConvolve  <<< h_Gauss_Grid, h_Gauss_Block, sizeof(float) * (h_Gauss_Block.x + GAUSS_Ksize - 1) * h_Gauss_Block.y >>>
+                                (d_big_blurred_artifact_map_inter, d_big_artifact_map, big_width, big_height, GAUSS_Ksize);
             cudaEventRecord(H_Gauss_End);                                
  
             // cudaDeviceSynchronize();
@@ -269,8 +269,8 @@ int main(int argc, char* argv[])
             //     exit(-1);
             // }
             cudaEventRecord(V_Gauss_Start);
-            verticalGuassianBlurConvolve    <<< v_Guas_Grid, v_Guas_Block, sizeof(float) * (v_Guas_Block.y + GUAS_Ksize - 1) * v_Guas_Block.x >>>
-                                (d_big_blurred_artifact_map, d_big_blurred_artifact_map_inter, big_width, big_height, 0.05, GUAS_Ksize);
+            verticalGaussianBlurConvolve    <<< v_Gauss_Grid, v_Gauss_Block, sizeof(float) * (v_Gauss_Block.y + GAUSS_Ksize - 1) * v_Gauss_Block.x >>>
+                                (d_big_blurred_artifact_map, d_big_blurred_artifact_map_inter, big_width, big_height, 0.05, GAUSS_Ksize);
             cudaEventRecord(V_Gauss_End);
             
             // cudaDeviceSynchronize();

@@ -327,9 +327,9 @@ __device__ float calculateSSIMDevice(float window1[8][8], float window2[8][8], i
     return ssim;
 }
 
-void GAUSSianBlur_Map(float* blur_map, float* input_map, int width, int height, int radius, float sigma)
+void GaussianBlur_Map(float* blur_map, float* input_map, int width, int height, int radius, float sigma)
 {
-    //Generate Normalized GAUSSian Kernal for blurring. This may need to be adjusted so I'll make it flexible.
+    //Generate Normalized Gaussian Kernal for blurring. This may need to be adjusted so I'll make it flexible.
     //We can eventually hardcode this when we settle on ideal blur.
     int kernel_size = 2 * radius + 1;
     int kernel_center = kernel_size / 2;

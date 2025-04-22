@@ -696,9 +696,9 @@ __global__ void Artifact_Shared_Memory_Kernel(float* artifact_map, unsigned char
     artifact_map[Row * width + Col] = ssim * img_diff;
 }
 
-__constant__ float d_guas_kernel_seperable[7] = { 0.0366328470,   0.111280762,    0.216745317,    0.270682156,    0.216745317,    0.111280762,    0.0366328470 };
+__constant__ float d_gauss_kernel_seperable[7] = { 0.0366328470,   0.111280762,    0.216745317,    0.270682156,    0.216745317,    0.111280762,    0.0366328470 };
 
-__global__ void horizontalGAUSSianBlurConvolve(float* blur_map, float* input_map, int width, int height, int ksize)
+__global__ void horizontalGaussianBlurConvolve(float* blur_map, float* input_map, int width, int height, int ksize)
 {
     int Row = blockIdx.y * blockDim.y + threadIdx.y;
     int Col = blockIdx.x * blockDim.x + threadIdx.x;
@@ -747,7 +747,7 @@ __global__ void horizontalGAUSSianBlurConvolve(float* blur_map, float* input_map
         //Horizontal Convolve
         for (int k = -radius; k <= radius; k++) 
         {
-            sum += s_tile_h[tile_y * tile_width + (tile_x - k)] * d_guas_kernel_seperable[k + radius];
+            sum += s_tile_h[tile_y * tile_width + (tile_x - k)] * d_gauss_kernel_seperable[k + radius];
         }
 
         //Global Write
@@ -755,7 +755,7 @@ __global__ void horizontalGAUSSianBlurConvolve(float* blur_map, float* input_map
     }
 }
 
-__global__ void verticalGAUSSianBlurConvolve(float* blur_map, float* input_map, int width, int height, float threshold, int ksize)
+__global__ void verticalGaussianBlurConvolve(float* blur_map, float* input_map, int width, int height, float threshold, int ksize)
 {
     int Row = blockIdx.y * blockDim.y + threadIdx.y;
     int Col = blockIdx.x * blockDim.x + threadIdx.x;
@@ -804,7 +804,7 @@ __global__ void verticalGAUSSianBlurConvolve(float* blur_map, float* input_map, 
         //Horizontal Convolve
         for (int k = -radius; k <= radius; k++) 
         {
-            sum += s_tile_v[(tile_y - k) * tile_width + tile_x] * d_guas_kernel_seperable[k + radius];
+            sum += s_tile_v[(tile_y - k) * tile_width + tile_x] * d_gauss_kernel_seperable[k + radius];
         }
 
         //Global Write
@@ -813,9 +813,9 @@ __global__ void verticalGAUSSianBlurConvolve(float* blur_map, float* input_map, 
 }
 
 
-__global__ void GAUSSianBlur_Threshold_Map_Naive_Kernel(float* blur_map, float* input_map, int width, int height, int radius, float sigma, float threshold)
+__global__ void GaussianBlur_Threshold_Map_Naive_Kernel(float* blur_map, float* input_map, int width, int height, int radius, float sigma, float threshold)
 {
-    //Generate Normalized GAUSSian Kernal for blurring. This may need to be adjusted so I'll make it flexible.
+    //Generate Normalized Gaussian Kernal for blurring. This may need to be adjusted so I'll make it flexible.
     //We can eventually hardcode this when we settle on ideal blur.
     int kernel_size = 2 * radius + 1;
     int kernel_center = kernel_size / 2;

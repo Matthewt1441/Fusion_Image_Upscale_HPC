@@ -84,7 +84,7 @@ do
         #     for block_dim_x in ${DIM_X[@]}
         #     do
                 file=gaus_$((GAME_COUNT))_$((scale)).txt
-                ./GUAS_TEST_BENCH_Solution $scale $game -t vector > Kernel_Testing/GAUSS/$file
+                ./GAUSS_TEST_BENCH_Solution $scale $game -t vector > Kernel_Testing/GAUSS/$file
         #     done
         # done
     done

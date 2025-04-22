@@ -151,13 +151,13 @@ int main(int argc, char* argv[])
         dim3 Arti_Grid(((big_width - 1) / Arti_Block.x) + 1, ((big_height - 1) / Arti_Block.y) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
         int  Arti_Shared_Mem_Size = sizeof(float) * 2 * 8 * 8;
 
-        //Setup GAUSSian Blur based on passed in Args
-        int GUAS_Ksize = 7;
-        float GUAS_Sigma = 1.5;
-        // dim3 h_Guas_Block(block_dim_x, block_dim_y);
-        // dim3 h_Guas_Grid(((big_width - 1) / h_Guas_Block.x) + 1, ((big_height - 1) / h_Guas_Block.y) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
-        // dim3 v_Guas_Block(block_dim_x, block_dim_y);
-        // dim3 v_Guas_Grid(((big_width - 1) / v_Guas_Block.x) + 1, ((big_height - 1) / v_Guas_Block.y) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
+        //Setup Gaussian Blur based on passed in Args
+        int GAUSS_Ksize = 7;
+        float GAUSS_Sigma = 1.5;
+        // dim3 h_Gauss_Block(block_dim_x, block_dim_y);
+        // dim3 h_Gauss_Grid(((big_width - 1) / h_Gauss_Block.x) + 1, ((big_height - 1) / h_Gauss_Block.y) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
+        // dim3 v_Gauss_Block(block_dim_x, block_dim_y);
+        // dim3 v_Gauss_Grid(((big_width - 1) / v_Gauss_Block.x) + 1, ((big_height - 1) / v_Gauss_Block.y) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
         // dim3 Gaus_Naive_Block(block_dim_x, block_dim_y);
         // dim3 Gaus_Naive_Grid(((big_width - 1) / Gaus_Naive_Block.x) + 1, ((big_height - 1) / Gaus_Naive_Block.y) + 1); 
 
@@ -185,7 +185,7 @@ int main(int argc, char* argv[])
         rgbToRGBA_Kernel << < RGB_Grid, RGB_Block, rgbToRGBA_Shared_Mem_Size >> > (d_RGBA_img, d_img, width * height);
         cudaDeviceSynchronize();
 
-        //Serial Code Up Until GAUSS
+        //Serial Code Up Until Gauss
         // nearestNeighbors(h_big_img_nn_grey, h_big_img_nn, big_width, big_height, h_img, width, height, scale);
         // bicubicInterpolation(h_big_img_bic, big_width, big_height, h_img, width, height, scale);
         // RGB2Greyscale(h_big_img_bic_grey, h_big_img_bic, big_width, big_height);
@@ -194,7 +194,7 @@ int main(int argc, char* argv[])
         // SSIM_Grey(h_ssim_map, h_big_img_nn_grey, h_big_img_bic_grey, big_width, big_height);
         // MapMul(h_artifact_map, h_diff_map, h_ssim_map, big_width, big_height);
 
-        //CUDA Code Up until GAUSS
+        //CUDA Code Up until Gauss
         nearestNeighbors_GreyCon_Kernel_RGBA                    <<< NN_Grid, NN_Block >>>                                   (d_big_img_nn, d_big_img_nn_grey, d_RGBA_img, big_width, big_height, width, height, scale);
         bicubicInterpolation_Shared_Memory_GreyCon_Kernel_RGBA  <<< BiCubic_Grid, BiCubic_Block, BiCubic_Shared_Mem_Size >>>(d_big_img_bic, d_big_img_bic_grey, d_RGBA_img, big_width, big_height, width, height, scale);
         Artifact_Shared_Memory_Kernel                           <<< Arti_Grid, Arti_Block, Arti_Shared_Mem_Size >>>         (d_big_artifact_map, d_big_img_nn_grey, d_big_img_bic_grey, big_width, big_height);
@@ -202,7 +202,7 @@ int main(int argc, char* argv[])
         
         //******************************* Run & Time Kernels ********************************//
         #define ITERATIONS 5
-        printf("GAUSSian Blur Test\nScale Factor, %d\nInput Image Dimensions, %d , %d\nOutput Image Dimensions, %d, %d\n", scale, width, height, big_width, big_height);
+        printf("Gaussian Blur Test\nScale Factor, %d\nInput Image Dimensions, %d , %d\nOutput Image Dimensions, %d, %d\n", scale, width, height, big_width, big_height);
         printf("Block_Y, Block_X, Version, ");
         for(int i = 0; i<ITERATIONS; i++)
         {
@@ -214,14 +214,14 @@ int main(int argc, char* argv[])
         {
             for(int x = 1; x <= 1024; x*=2)
             {
-                dim3 h_Guas_Block(x, y);
-                dim3 h_Guas_Grid(((big_width - 1) / h_Guas_Block.x) + 1, ((big_height - 1) / h_Guas_Block.y) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
-                dim3 v_Guas_Block(x, y);
-                dim3 v_Guas_Grid(((big_width - 1) / v_Guas_Block.x) + 1, ((big_height - 1) / v_Guas_Block.y) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
+                dim3 h_Gauss_Block(x, y);
+                dim3 h_Gauss_Grid(((big_width - 1) / h_Gauss_Block.x) + 1, ((big_height - 1) / h_Gauss_Block.y) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
+                dim3 v_Gauss_Block(x, y);
+                dim3 v_Gauss_Grid(((big_width - 1) / v_Gauss_Block.x) + 1, ((big_height - 1) / v_Gauss_Block.y) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
                 dim3 Gaus_Naive_Block(x, y);
                 dim3 Gaus_Naive_Grid(((big_width - 1) / Gaus_Naive_Block.x) + 1, ((big_height - 1) / Gaus_Naive_Block.y) + 1); 
 
-                //printf("GAUSSian Blur Test\nBlock Dimensions, %d x %d, Scale Factor, %d\nInput Image Dimensions, %d , %d\nOutput Image Dimensions, %d, %d\n", block_dim_x, block_dim_y, scale, width, height, big_width, big_height);
+                //printf("Gaussian Blur Test\nBlock Dimensions, %d x %d, Scale Factor, %d\nInput Image Dimensions, %d , %d\nOutput Image Dimensions, %d, %d\n", block_dim_x, block_dim_y, scale, width, height, big_width, big_height);
                 double Serial_Time[ITERATIONS] = {0};
                 double Naive_Time[ITERATIONS] = {0};
                 double Horizontal_Seperable_Time[ITERATIONS] = {0};
@@ -232,7 +232,7 @@ int main(int argc, char* argv[])
                     // ////////////TIME GAUSSIAN WITH SERIAL CODE IMPLEMENTATION/////////////////////
                     // auto start = std::chrono::high_resolution_clock::now();
 
-                    // GAUSSianBlur_Map(h_blurred_artifact_map, h_artifact_map, big_width, big_height, 3, 1.5);
+                    // GaussianBlur_Map(h_blurred_artifact_map, h_artifact_map, big_width, big_height, 3, 1.5);
                     // MapThreshold(h_blurred_artifact_map, 0.05, big_width, big_height);
 
                     // auto end = std::chrono::high_resolution_clock::now();
@@ -245,14 +245,14 @@ int main(int argc, char* argv[])
                     // // if(i == ITERATIONS-1)
                     // // {
                     // //     Map2Greyscale(h_big_img_BLURRED_ARTIFACT_grey   , h_blurred_artifact_map, big_width, big_height, 255);   //Artifact values should be between 0-255;
-                    // //     writePPMGrey("./GUAS_TEST/GUAS_SERIAL.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
+                    // //     writePPMGrey("./GAUSS_TEST/GAUSS_SERIAL.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
                     // //     cudaDeviceSynchronize();
                     // // }
                     // ////////////TIME GAUSSIAN WITH SERIAL CODE IMPLEMENTATION/////////////////////
                     
                     ////////////TIME GAUSSIAN NAIVE CUDA IMPLEMENTATION/////////////////////
                     cudaEventRecord(astartEvent1, 0);
-                    GAUSSianBlur_Threshold_Map_Naive_Kernel <<< Gaus_Naive_Grid, Gaus_Naive_Block >>>   (d_big_blurred_artifact_map , d_big_artifact_map, big_width, big_height, 3, 1.5, 0.05);
+                    GaussianBlur_Threshold_Map_Naive_Kernel <<< Gaus_Naive_Grid, Gaus_Naive_Block >>>   (d_big_blurred_artifact_map , d_big_artifact_map, big_width, big_height, 3, 1.5, 0.05);
                     cudaEventRecord(astopEvent1, 0);
                     
                     cudaDeviceSynchronize();
@@ -282,7 +282,7 @@ int main(int argc, char* argv[])
                     //     //COPY OVER IMAGE DATA
                     //     cudaMemcpy(h_blurred_artifact_map   , d_big_blurred_artifact_map, sizeof(float) * big_width * big_height    , cudaMemcpyDeviceToHost);
                     //     Map2Greyscale(h_big_img_BLURRED_ARTIFACT_grey   , h_blurred_artifact_map, big_width, big_height, 255);   //Artifact values should be between 0-255;
-                    //     writePPMGrey("./GUAS_TEST/GUAS_NAIVE.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
+                    //     writePPMGrey("./GAUSS_TEST/GAUSS_NAIVE.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
                     //     cudaDeviceSynchronize();
                     // }
                     ////////////TIME GAUSSIAN NAIVE CUDA IMPLEMENTATION/////////////////////
@@ -290,11 +290,11 @@ int main(int argc, char* argv[])
 
                     ////////////TIME GAUSSIAN WITH SEPERABLE CUDA IMPLEMENTATION/////////////////////
                     cudaEventRecord(astartEvent1, 0);
-                    horizontalGAUSSianBlurConvolve  <<< h_Guas_Grid, h_Guas_Block, sizeof(float) * (h_Guas_Block.x + GUAS_Ksize - 1) * h_Guas_Block.y >>>(d_big_blurred_artifact_map_inter, d_big_artifact_map, big_width, big_height, GUAS_Ksize);
+                    horizontalGaussianBlurConvolve  <<< h_Gauss_Grid, h_Gauss_Block, sizeof(float) * (h_Gauss_Block.x + GAUSS_Ksize - 1) * h_Gauss_Block.y >>>(d_big_blurred_artifact_map_inter, d_big_artifact_map, big_width, big_height, GAUSS_Ksize);
                     cudaEventRecord(astopEvent1, 0);
             
                     cudaEventRecord(astartEvent2, 0);
-                    verticalGAUSSianBlurConvolve    <<< v_Guas_Grid, v_Guas_Block, sizeof(float) * (v_Guas_Block.y + GUAS_Ksize - 1) * v_Guas_Block.x >>>(d_big_blurred_artifact_map, d_big_blurred_artifact_map_inter, big_width, big_height, 0.05, GUAS_Ksize);
+                    verticalGaussianBlurConvolve    <<< v_Gauss_Grid, v_Gauss_Block, sizeof(float) * (v_Gauss_Block.y + GAUSS_Ksize - 1) * v_Gauss_Block.x >>>(d_big_blurred_artifact_map, d_big_blurred_artifact_map_inter, big_width, big_height, 0.05, GAUSS_Ksize);
                     cudaEventRecord(astopEvent2, 0);
                     
                     error = cudaGetLastError();
@@ -329,7 +329,7 @@ int main(int argc, char* argv[])
                     //     //COPY OVER IMAGE DATA
                     //     cudaMemcpy(h_blurred_artifact_map   , d_big_blurred_artifact_map, sizeof(float) * big_width * big_height    , cudaMemcpyDeviceToHost);
                     //     Map2Greyscale(h_big_img_BLURRED_ARTIFACT_grey   , h_blurred_artifact_map, big_width, big_height, 255);   //Artifact values should be between 0-255;
-                    //     writePPMGrey("./GUAS_TEST/GUAS_SEPERABLE_CONVOLVE.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
+                    //     writePPMGrey("./GAUSS_TEST/GAUSS_SEPERABLE_CONVOLVE.ppm", (char*)h_big_img_BLURRED_ARTIFACT_grey, big_width, big_height);
                     //     cudaDeviceSynchronize();
                     // }
                     ////////////TIME GAUSSIAN WITH SEPERABLE CUDA IMPLEMENTATION/////////////////////

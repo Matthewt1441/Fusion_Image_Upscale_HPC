@@ -257,7 +257,7 @@ void SSIM_Grey(float* ssim_map, unsigned char* img_1, unsigned char* img_2, int 
     //int window_size = 8;
     //Window size dictates the size of structures that we can detect. Maybe should look into what effect this has
     //on overall image quality & performance
-    // Consider the guassian option with an 11x11 window
+    // Consider the gaussian option with an 11x11 window
     float window_img1[8][8] = { 0 };
     float window_img2[8][8] = { 0 };
 
@@ -382,7 +382,7 @@ __global__ void SSIM_Grey_Kernel(float* ssim_map, unsigned char* img_1, unsigned
     //int window_size = 8;
     //Window size dictates the size of structures that we can detect. Maybe should look into what effect this has
     //on overall image quality & performance
-    // Consider the guassian option with an 11x11 window
+    // Consider the gaussian option with an 11x11 window
     float window_img1[8][8] = { 0 };
     float window_img2[8][8] = { 0 };
 
@@ -473,7 +473,7 @@ __global__ void Artifact_Grey_Kernel(float* artifact_map, unsigned char* img_1, 
     //int window_size = 8;
     //Window size dictates the size of structures that we can detect. Maybe should look into what effect this has
     //on overall image quality & performance
-    // Consider the guassian option with an 11x11 window
+    // Consider the gaussian option with an 11x11 window
     float window_img1[8][8] = { 0 };
     float window_img2[8][8] = { 0 };
 
@@ -512,7 +512,7 @@ __global__ void Artifact_Shared_Memory_Kernel(float* artifact_map, unsigned char
     //int window_size = 8;
     //Window size dictates the size of structures that we can detect. Maybe should look into what effect this has
     //on overall image quality & performance
-    // Consider the guassian option with an 11x11 window
+    // Consider the gaussian option with an 11x11 window
 
     extern __shared__ float window_img[];
 
@@ -589,7 +589,7 @@ __global__ void Artifact_Shared_Memory_Kernel3(float* artifact_map, unsigned cha
     //int window_size = 8;
     //Window size dictates the size of structures that we can detect. Maybe should look into what effect this has
     //on overall image quality & performance
-    // Consider the guassian option with an 11x11 window
+    // Consider the gaussian option with an 11x11 window
 
     extern __shared__ float window_img[];
 
@@ -664,7 +664,7 @@ __global__ void Artifact_Shared_Memory_Kernel2(float* artifact_map, unsigned cha
     //int window_size = 8;
     //Window size dictates the size of structures that we can detect. Maybe should look into what effect this has
     //on overall image quality & performance
-    // Consider the guassian option with an 11x11 window
+    // Consider the gaussian option with an 11x11 window
 
     extern __shared__ float window_img[];
 

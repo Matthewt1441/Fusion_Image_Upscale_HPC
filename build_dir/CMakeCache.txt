@@ -366,9 +366,6 @@ CUDA_nvToolsExt_LIBRARY:FILEPATH=/opt/ohpc/pub/apps/cuda/11.0/lib64/libnvToolsEx
 //Path to a library.
 CUDA_rt_LIBRARY:FILEPATH=/usr/lib64/librt.so
 
-//Dependencies for the target
-STATIC_LIB_DEPENDS:STATIC=general;/opt/ohpc/pub/apps/cuda/11.0/lib64/libcudart_static.a;general;dl;general;/usr/lib64/librt.so;
-
 //Value Computed by CMake
 teachingkit-labs_BINARY_DIR:STATIC=/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir
 
@@ -538,7 +535,7 @@ CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 CUDA_64_BIT_DEVICE_CODE-ADVANCED:INTERNAL=1
 //List of intermediate files that are part of the cuda dependency
 // scanning.
-CUDA_ADDITIONAL_CLEAN_FILES:INTERNAL=/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/FusionImage_Solution.dir/Fusion_Image_Upscale/FusionImage/FusionImage_Solution_generated_solution.cu.o.depend;/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/GUAS_TEST_BENCH_Solution.dir/Fusion_Image_Upscale/FusionImage/GUASS_TEST_BENCH/GUAS_TEST_BENCH_Solution_generated_solution.cu.o.depend;/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/BIC_TEST_BENCH2_Solution.dir/Fusion_Image_Upscale/FusionImage/BIC_TEST_BENCH2/BIC_TEST_BENCH2_Solution_generated_solution.cu.o.depend;/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/CUDA_TEST_BENCH_Solution.dir/Fusion_Image_Upscale/FusionImage/CUDA_TEST_BENCH/CUDA_TEST_BENCH_Solution_generated_solution.cu.o.depend;/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/CUDA_TEST_BENCH_TOGETHER_Solution.dir/Fusion_Image_Upscale/FusionImage/CUDA_TEST_BENCH/CUDA_TEST_BENCH_TOGETHER_Solution_generated_solution_Timed_Together.cu.o.depend;/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/CUDA_TEST_BENCH_INDIVIDUALLY_Solution.dir/Fusion_Image_Upscale/FusionImage/CUDA_TEST_BENCH/CUDA_TEST_BENCH_INDIVIDUALLY_Solution_generated_solution_Timed_Individually.cu.o.depend
+CUDA_ADDITIONAL_CLEAN_FILES:INTERNAL=/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/ARTIFACT_Testbench_Solution.dir/Fusion_Image_Upscale/FusionImage/ARTIFACT_Testbench/ARTIFACT_Testbench_Solution_generated_solution.cu.o.depend;/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/BIC_TEST_BENCH2_Solution.dir/Fusion_Image_Upscale/FusionImage/BIC_TEST_BENCH2/BIC_TEST_BENCH2_Solution_generated_solution.cu.o.depend;/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/CUDA_TEST_BENCH_TOGETHER_Solution.dir/Fusion_Image_Upscale/FusionImage/CUDA_TEST_BENCH/CUDA_TEST_BENCH_TOGETHER_Solution_generated_solution_Timed_Together.cu.o.depend;/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/CUDA_TEST_BENCH_INDIVIDUALLY_Solution.dir/Fusion_Image_Upscale/FusionImage/CUDA_TEST_BENCH/CUDA_TEST_BENCH_INDIVIDUALLY_Solution_generated_solution_Timed_Individually.cu.o.depend;/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/GUAS_TEST_BENCH_Solution.dir/Fusion_Image_Upscale/FusionImage/GUASS_TEST_BENCH/GUAS_TEST_BENCH_Solution_generated_solution.cu.o.depend;/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/NN_TEST_BENCH_Solution.dir/Fusion_Image_Upscale/FusionImage/NN_TestBench/NN_TEST_BENCH_Solution_generated_solution.cu.o.depend
 //ADVANCED property for variable: CUDA_ATTACH_VS_BUILD_RULE_TO_CUDA_FILE
 CUDA_ATTACH_VS_BUILD_RULE_TO_CUDA_FILE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CUDA_BUILD_CUBIN

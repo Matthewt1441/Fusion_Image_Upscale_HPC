@@ -1,4 +1,8 @@
+/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/ARTIFACT_Testbench_Solution.dir
+/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/BIC_TEST_BENCH2_Solution.dir
 /home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/CUDA_TEST_BENCH_TOGETHER_Solution.dir
 /home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/CUDA_TEST_BENCH_INDIVIDUALLY_Solution.dir
+/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/GUAS_TEST_BENCH_Solution.dir
+/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/NN_TEST_BENCH_Solution.dir
 /home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/edit_cache.dir
 /home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/rebuild_cache.dir

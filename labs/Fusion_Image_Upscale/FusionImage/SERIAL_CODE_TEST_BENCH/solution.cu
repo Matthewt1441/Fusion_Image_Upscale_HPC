@@ -135,7 +135,7 @@ int main(int argc, char* argv[])
             MapMul(h_artifact_map, h_diff_map, h_ssim_map, big_width, big_height);
 
             //PHASE 4 : MAP BLUR
-            GuassianBlur_Map(h_blurred_artifact_map, h_artifact_map, big_width, big_height, 3, 1.5);
+            GaussianBlur_Map(h_blurred_artifact_map, h_artifact_map, big_width, big_height, 3, 1.5);
             MapThreshold(h_blurred_artifact_map, 0.05, big_width, big_height);
 
             //PHASE 5 : IMAGE FUSION

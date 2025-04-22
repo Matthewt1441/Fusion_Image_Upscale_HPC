@@ -237,7 +237,7 @@ __global__ void Artifact_Shared_Memory_Kernel(float* artifact_map, unsigned char
     //int window_size = 8;
     //Window size dictates the size of structures that we can detect. Maybe should look into what effect this has
     //on overall image quality & performance
-    // Consider the guassian option with an 11x11 window
+    // Consider the gaussian option with an 11x11 window
 
     extern __shared__ float window_img[];
 
@@ -304,9 +304,9 @@ __global__ void Artifact_Shared_Memory_Kernel(float* artifact_map, unsigned char
     artifact_map[Row * width + Col] = ssim * img_diff;
 }
 
-__constant__ float d_guas_kernel_seperable[7] = { 0.0366328470,   0.111280762,    0.216745317,    0.270682156,    0.216745317,    0.111280762,    0.0366328470 };
+__constant__ float d_gauss_kernel_seperable[7] = { 0.0366328470,   0.111280762,    0.216745317,    0.270682156,    0.216745317,    0.111280762,    0.0366328470 };
 
-__global__ void horizontalGuassianBlurConvolve(float* blur_map, float* input_map, int width, int height, int ksize)
+__global__ void horizontalGaussianBlurConvolve(float* blur_map, float* input_map, int width, int height, int ksize)
 {
     int Row = blockIdx.y * blockDim.y + threadIdx.y;
     int Col = blockIdx.x * blockDim.x + threadIdx.x;
@@ -355,7 +355,7 @@ __global__ void horizontalGuassianBlurConvolve(float* blur_map, float* input_map
         //Horizontal Convolve
         for (int k = -radius; k <= radius; k++) 
         {
-            sum += s_tile_h[tile_y * tile_width + (tile_x - k)] * d_guas_kernel_seperable[k + radius];
+            sum += s_tile_h[tile_y * tile_width + (tile_x - k)] * d_gauss_kernel_seperable[k + radius];
         }
 
         //Global Write
@@ -363,7 +363,7 @@ __global__ void horizontalGuassianBlurConvolve(float* blur_map, float* input_map
     }
 }
 
-__global__ void verticalGuassianBlurConvolve(float* blur_map, float* input_map, int width, int height, float threshold, int ksize)
+__global__ void verticalGaussianBlurConvolve(float* blur_map, float* input_map, int width, int height, float threshold, int ksize)
 {
     int Row = blockIdx.y * blockDim.y + threadIdx.y;
     int Col = blockIdx.x * blockDim.x + threadIdx.x;
@@ -411,7 +411,7 @@ __global__ void verticalGuassianBlurConvolve(float* blur_map, float* input_map, 
         //Horizontal Convolve
         for (int k = -radius; k <= radius; k++) 
         {
-            sum += s_tile_v[(tile_y - k) * tile_width + tile_x] * d_guas_kernel_seperable[k + radius];
+            sum += s_tile_v[(tile_y - k) * tile_width + tile_x] * d_gauss_kernel_seperable[k + radius];
         }
 
         //Global Write
@@ -419,14 +419,14 @@ __global__ void verticalGuassianBlurConvolve(float* blur_map, float* input_map, 
     }
 }
 
-__global__ void GuassianBlur_Threshold_Map_Naive_Kernel(float* blur_map, float* input_map, int width, int height, int radius, float sigma, float threshold)
+__global__ void GaussianBlur_Threshold_Map_Naive_Kernel(float* blur_map, float* input_map, int width, int height, int radius, float sigma, float threshold)
 {
-    //Generate Normalized Guassian Kernal for blurring. This may need to be adjusted so I'll make it flexible.
+    //Generate Normalized Gaussian Kernal for blurring. This may need to be adjusted so I'll make it flexible.
     //We can eventually hardcode this when we settle on ideal blur.
     int kernel_size = 2 * radius + 1;
     int kernel_center = kernel_size / 2;
     float sum = 0.0;
-    float guassian_kernel[49] = { 0 };
+    float gaussian_kernel[49] = { 0 };
 
     int Row = blockIdx.y * blockDim.y + threadIdx.y;
     int Col = blockIdx.x * blockDim.x + threadIdx.x;
@@ -440,8 +440,8 @@ __global__ void GuassianBlur_Threshold_Map_Naive_Kernel(float* blur_map, float* 
             for (int x = 0; x < kernel_size; x++)
             {
                 double exponent = -((x - kernel_center) * (x - kernel_center) - (y - kernel_center) * (y - kernel_center)) / (2 * sigma * sigma);
-                guassian_kernel[y * kernel_size + x] = exp(exponent) / (2 * my_PI * sigma * sigma);
-                sum += guassian_kernel[y * kernel_size + x];
+                gaussian_kernel[y * kernel_size + x] = exp(exponent) / (2 * my_PI * sigma * sigma);
+                sum += gaussian_kernel[y * kernel_size + x];
             }
         }
         //Normalize
@@ -449,7 +449,7 @@ __global__ void GuassianBlur_Threshold_Map_Naive_Kernel(float* blur_map, float* 
         //Will try for now. It may be the right way to do it. I don't know for sure.
         for (int i = 0; i < kernel_size; i++)
             for (int j = 0; j < kernel_size; j++)
-                guassian_kernel[i * kernel_size + j] /= sum;
+                gaussian_kernel[i * kernel_size + j] /= sum;
 
         sum = 0.0;
 
@@ -460,7 +460,7 @@ __global__ void GuassianBlur_Threshold_Map_Naive_Kernel(float* blur_map, float* 
 
                 //If we are within the image
                 if (map_x >= 0 && map_x < width && map_y >= 0 && map_y < height) {
-                    sum += input_map[map_y * width + map_x] * guassian_kernel[i * kernel_size + j];
+                    sum += input_map[map_y * width + map_x] * gaussian_kernel[i * kernel_size + j];
                 }
             }
         }

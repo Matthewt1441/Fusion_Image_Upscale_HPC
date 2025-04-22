@@ -206,7 +206,7 @@ void SSIM_Grey(float* ssim_map, unsigned char* img_1, unsigned char* img_2, int 
     //int window_size = 8;
     //Window size dictates the size of structures that we can detect. Maybe should look into what effect this has
     //on overall image quality & performance
-    // Consider the guassian option with an 11x11 window
+    // Consider the gaussian option with an 11x11 window
     float window_img1[8][8] = { 0 };
     float window_img2[8][8] = { 0 };
 
@@ -326,14 +326,14 @@ __device__ float calculateSSIMDevice(float window1[8][8], float window2[8][8], i
     return ssim;
 }
 
-void GuassianBlur_Map(float* blur_map, float* input_map, int width, int height, int radius, float sigma)
+void GaussianBlur_Map(float* blur_map, float* input_map, int width, int height, int radius, float sigma)
 {
-    //Generate Normalized Guassian Kernal for blurring. This may need to be adjusted so I'll make it flexible.
+    //Generate Normalized Gaussian Kernal for blurring. This may need to be adjusted so I'll make it flexible.
     //We can eventually hardcode this when we settle on ideal blur.
     int kernel_size = 2 * radius + 1;
     int kernel_center = kernel_size / 2;
     float sum = 0.0;
-    float* guassian_kernel = (float*)malloc(sizeof(float) * kernel_size * kernel_size);
+    float* gaussian_kernel = (float*)malloc(sizeof(float) * kernel_size * kernel_size);
 
     float my_PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164062;
 
@@ -342,8 +342,8 @@ void GuassianBlur_Map(float* blur_map, float* input_map, int width, int height, 
         for (int x = 0; x < kernel_size; x++)
         {
             double exponent = -((x - kernel_center) * (x - kernel_center) - (y - kernel_center) * (y - kernel_center)) / (2 * sigma * sigma);
-            guassian_kernel[y * kernel_size + x] = exp(exponent) / (2 * my_PI * sigma * sigma);
-            sum += guassian_kernel[y * kernel_size + x];
+            gaussian_kernel[y * kernel_size + x] = exp(exponent) / (2 * my_PI * sigma * sigma);
+            sum += gaussian_kernel[y * kernel_size + x];
         }
     }
     //Normalize
@@ -351,7 +351,7 @@ void GuassianBlur_Map(float* blur_map, float* input_map, int width, int height, 
     //Will try for now. It may be the right way to do it. I don't know for sure.
     for (int i = 0; i < kernel_size; i++) {
         for (int j = 0; j < kernel_size; j++) {
-            guassian_kernel[i * kernel_size + j] /= sum;
+            gaussian_kernel[i * kernel_size + j] /= sum;
         }
     }
 
@@ -368,7 +368,7 @@ void GuassianBlur_Map(float* blur_map, float* input_map, int width, int height, 
 
                     //If we are within the image
                     if (map_x >= 0 && map_x < width && map_y >= 0 && map_y < height) {
-                        sum += input_map[map_y * width + map_x] * guassian_kernel[i * kernel_size + j];
+                        sum += input_map[map_y * width + map_x] * gaussian_kernel[i * kernel_size + j];
                     }
                 }
             }
@@ -376,7 +376,7 @@ void GuassianBlur_Map(float* blur_map, float* input_map, int width, int height, 
         }
     }
 
-    free(guassian_kernel);
+    free(gaussian_kernel);
 
 }
 

@@ -156,6 +156,43 @@ __global__ void ABS_Difference_Grey_Kernel(float* diff_map, unsigned char* img_1
     }
 }
 
+__device__ float calculateSSIMDevice(float window1[8][8], float window2[8][8], int window_width, int window_height)
+{
+    float sum1 = 0, sum2 = 0, sum1Sq = 0, sum2Sq = 0, sum12 = 0;
+    int size = window_height * window_width;
+    int valid_count = 0;
+
+    for (int i = 0; i < window_height; ++i) 
+    {
+        for (int j = 0; j < window_width; ++j)
+        {
+            if ((window1[i][j] >= 0) && (window2[i][j] >= 0))
+            {
+                sum1 += window1[i][j];
+                sum2 += window2[i][j];
+                sum1Sq += window1[i][j] * window1[i][j];
+                sum2Sq += window2[i][j] * window2[i][j];
+                sum12 += window1[i][j] * window2[i][j];
+                valid_count++;
+            }
+        }
+    }
+
+    float mu1 = sum1 / valid_count;
+    float mu2 = sum2 / valid_count;
+    float sigma1Sq = (sum1Sq / valid_count) - (mu1 * mu1);
+    float sigma2Sq = (sum2Sq / valid_count) - (mu2 * mu2);
+    float sigma12 = (sum12 / valid_count) - (mu1 * mu2);
+
+    // Stabilizing constants
+    float C1 = 6.5025; // (K1*L)^2, where K1=0.01 and L=255
+    float C2 = 58.5225; // (K2*L)^2, where K2=0.03 and L=255
+
+    float ssim = ((2 * mu1 * mu2 + C1) * (2 * sigma12 + C2)) / ((mu1 * mu1 + mu2 * mu2 + C1) * (sigma1Sq + sigma2Sq + C2));
+    return ssim;
+}
+
+
 __global__ void SSIM_Grey_Kernel(float* ssim_map, unsigned char* img_1, unsigned char* img_2, int width, int height)
 {
     //int window_size = 8;
@@ -218,7 +255,7 @@ __global__ void GuassianBlur_Map_Kernel(float* blur_map, float* input_map, int w
     int Row = blockIdx.y * blockDim.y + threadIdx.y;
     int Col = blockIdx.x * blockDim.x + threadIdx.x;
 
-    float M_PI = 3.14;
+    float my_PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164062;
 
     if (Row < height && Col < width)
     {
@@ -227,7 +264,7 @@ __global__ void GuassianBlur_Map_Kernel(float* blur_map, float* input_map, int w
             for (int x = 0; x < kernel_size; x++)
             {
                 double exponent = -((x - kernel_center) * (x - kernel_center) - (y - kernel_center) * (y - kernel_center)) / (2 * sigma * sigma);
-                guassian_kernel[y * kernel_size + x] = exp(exponent) / (2 * M_PI * sigma * sigma);
+                guassian_kernel[y * kernel_size + x] = exp(exponent) / (2 * my_PI * sigma * sigma);
                 sum += guassian_kernel[y * kernel_size + x];
             }
         }

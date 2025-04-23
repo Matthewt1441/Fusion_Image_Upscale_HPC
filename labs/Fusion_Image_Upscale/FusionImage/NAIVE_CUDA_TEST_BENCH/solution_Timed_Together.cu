@@ -84,6 +84,8 @@ int main(int argc, char* argv[])
         //Define big image width and height
         big_width = width * scale; big_height = height * scale;
         big_pixel_count = big_width * big_height;
+        int const_width = width;
+        int const_height = height;
 
         //******** Malloc Host Images ********//
         h_big_img_fused                 = (unsigned char*)malloc(sizeof(unsigned char) * big_pixel_count * 3);
@@ -144,11 +146,8 @@ int main(int argc, char* argv[])
 
         cudaEventRecord(total_Time_Start, 0);           //BEGIN TOTAL EXECUTION TIME
 
-        dim3 Grid(((big_width - 1) / block_dim) + 1, ((big_height - 1) / block_dim) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
-        dim3 Block(block_dim, block_dim);
-
-        int const_width = width;
-        int const_height = height;
+        dim3 Grid(((big_width - 1) / 16) + 1, ((big_height - 1) / 16) + 1);     //Calculate the number of blocks needed for the dimension. 1.0 * Forces Double
+        dim3 Block(16, 16);
 
         while (current_frame <= end_frame)
         {
@@ -201,8 +200,6 @@ int main(int argc, char* argv[])
 
             cudaDeviceSynchronize();
 
-            cudaMemcpy(big_img_fused, big_img_fused_cuda, sizeof(unsigned char) * big_width * big_height * 3, cudaMemcpyDeviceToHost);
-
             cudaEventRecord(compute_Frame_End, 0);
             cudaEventSynchronize(compute_Frame_End);
             
@@ -216,7 +213,7 @@ int main(int argc, char* argv[])
 
             //Send Device Images to Host
             cudaDeviceSynchronize();
-            cudaMemcpy(h_big_img_fused, big_img_fused, sizeof(unsigned char) * big_width * big_height * 3, cudaMemcpyDeviceToHost);
+            cudaMemcpy(h_big_img_fused, big_img_fused_cuda, sizeof(unsigned char) * big_width * big_height * 3, cudaMemcpyDeviceToHost);
             cudaEventRecord(one_Frame_End, 0);
             cudaEventSynchronize(one_Frame_End);
             
@@ -256,7 +253,7 @@ int main(int argc, char* argv[])
 
         memset(file_address, 0, sizeof(file_address));
 
-        strcat(file_address, "./CUDA_OUTPUT_TOGETHER/FUSED_"); 
+        strcat(file_address, "./NAIVE_CUDA_OUTPUT_TOGETHER/FUSED_"); 
 
         sprintf(file_name, "Scale_%d_Game_%s", scale, game_name);
 
@@ -272,17 +269,10 @@ int main(int argc, char* argv[])
         free(h_big_img_fused);
 
         //Free device Memory
-        cudaFree(d_img);
-        cudaFree(d_RGBA_img);
-        cudaFree(d_big_img_nn);
-        cudaFree(d_big_img_bic);
-        cudaFree(d_big_img_nn_grey);
-        cudaFree(d_big_img_bic_grey);
-        cudaFree(d_big_artifact_map);
-        cudaFree(d_big_blurred_artifact_map);
-        cudaFree(d_big_blurred_artifact_map_inter);
-        cudaFree(d_big_rgba_img_fused);
-        cudaFree(d_big_img_fused);
+        cudaFree(img_cuda);                 cudaFree(big_img_nn_cuda);      cudaFree(big_img_bic_cuda);     cudaFree(big_img_nn_grey_cuda);
+        cudaFree(big_img_bic_grey_cuda);    cudaFree(big_diff_map_cuda);    cudaFree(big_ssim_map_cuda);    cudaFree(big_artifact_map_cuda);
+        cudaFree(big_artifact_blurred_map_cuda);    cudaFree(big_img_fused_cuda);
+
     }
 
     catch (const std::exception& e)

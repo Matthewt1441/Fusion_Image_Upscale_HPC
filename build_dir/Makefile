@@ -117,82 +117,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named ARTIFACT_Testbench_Solution
+# Target rules for targets named NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution
 
 # Build rule for target.
-ARTIFACT_Testbench_Solution: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ARTIFACT_Testbench_Solution
-.PHONY : ARTIFACT_Testbench_Solution
+NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution
+.PHONY : NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution
 
 # fast build rule for target.
-ARTIFACT_Testbench_Solution/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ARTIFACT_Testbench_Solution.dir/build.make CMakeFiles/ARTIFACT_Testbench_Solution.dir/build
-.PHONY : ARTIFACT_Testbench_Solution/fast
-
-#=============================================================================
-# Target rules for targets named BIC_TEST_BENCH2_Solution
-
-# Build rule for target.
-BIC_TEST_BENCH2_Solution: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 BIC_TEST_BENCH2_Solution
-.PHONY : BIC_TEST_BENCH2_Solution
-
-# fast build rule for target.
-BIC_TEST_BENCH2_Solution/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BIC_TEST_BENCH2_Solution.dir/build.make CMakeFiles/BIC_TEST_BENCH2_Solution.dir/build
-.PHONY : BIC_TEST_BENCH2_Solution/fast
-
-#=============================================================================
-# Target rules for targets named CUDA_TEST_BENCH_TOGETHER_Solution
-
-# Build rule for target.
-CUDA_TEST_BENCH_TOGETHER_Solution: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CUDA_TEST_BENCH_TOGETHER_Solution
-.PHONY : CUDA_TEST_BENCH_TOGETHER_Solution
-
-# fast build rule for target.
-CUDA_TEST_BENCH_TOGETHER_Solution/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CUDA_TEST_BENCH_TOGETHER_Solution.dir/build.make CMakeFiles/CUDA_TEST_BENCH_TOGETHER_Solution.dir/build
-.PHONY : CUDA_TEST_BENCH_TOGETHER_Solution/fast
-
-#=============================================================================
-# Target rules for targets named CUDA_TEST_BENCH_INDIVIDUALLY_Solution
-
-# Build rule for target.
-CUDA_TEST_BENCH_INDIVIDUALLY_Solution: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CUDA_TEST_BENCH_INDIVIDUALLY_Solution
-.PHONY : CUDA_TEST_BENCH_INDIVIDUALLY_Solution
-
-# fast build rule for target.
-CUDA_TEST_BENCH_INDIVIDUALLY_Solution/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CUDA_TEST_BENCH_INDIVIDUALLY_Solution.dir/build.make CMakeFiles/CUDA_TEST_BENCH_INDIVIDUALLY_Solution.dir/build
-.PHONY : CUDA_TEST_BENCH_INDIVIDUALLY_Solution/fast
-
-#=============================================================================
-# Target rules for targets named GAUSS_TEST_BENCH_Solution
-
-# Build rule for target.
-GAUSS_TEST_BENCH_Solution: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 GAUSS_TEST_BENCH_Solution
-.PHONY : GAUSS_TEST_BENCH_Solution
-
-# fast build rule for target.
-GAUSS_TEST_BENCH_Solution/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/GAUSS_TEST_BENCH_Solution.dir/build.make CMakeFiles/GAUSS_TEST_BENCH_Solution.dir/build
-.PHONY : GAUSS_TEST_BENCH_Solution/fast
-
-#=============================================================================
-# Target rules for targets named NN_TEST_BENCH_Solution
-
-# Build rule for target.
-NN_TEST_BENCH_Solution: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 NN_TEST_BENCH_Solution
-.PHONY : NN_TEST_BENCH_Solution
-
-# fast build rule for target.
-NN_TEST_BENCH_Solution/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/NN_TEST_BENCH_Solution.dir/build.make CMakeFiles/NN_TEST_BENCH_Solution.dir/build
-.PHONY : NN_TEST_BENCH_Solution/fast
+NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution.dir/build.make CMakeFiles/NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution.dir/build
+.PHONY : NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution/fast
 
 # Help Target
 help:
@@ -202,12 +137,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... ARTIFACT_Testbench_Solution"
-	@echo "... BIC_TEST_BENCH2_Solution"
-	@echo "... CUDA_TEST_BENCH_INDIVIDUALLY_Solution"
-	@echo "... CUDA_TEST_BENCH_TOGETHER_Solution"
-	@echo "... GAUSS_TEST_BENCH_Solution"
-	@echo "... NN_TEST_BENCH_Solution"
+	@echo "... NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution"
 .PHONY : help
 
 

@@ -62,6 +62,7 @@ int main(int argc, char* argv[])
     float* big_artifact_map_cuda;
     float* big_artifact_blurred_map_cuda;
     
+    unsigned char* big_img_fused_cuda;
 
     //Lets start off with timing one image
     try

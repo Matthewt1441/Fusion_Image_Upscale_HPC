@@ -662,7 +662,7 @@ int streamed_version()
             memset(file_address, 0, sizeof(file_address));
 
             strcat(file_address, "./MAIN_OUTPUT/STREAM_OUTPUT/FUSED_"); 
-            sprintf(file_name, "Stream_%d_Scale_%d_Game_%s_%d.ppm", STREAM_COUNT, scale, game_name, s);
+            sprintf(file_name, "Streams_%d_Scale_%d_Stream_%d.ppm", STREAM_COUNT, scale, s);
             strcat(file_address, file_name);
             
             writePPM(file_address, (char*)h_big_img_fused[s], big_width, big_height);
@@ -688,14 +688,17 @@ int streamed_version()
         memset(file_address, 0, sizeof(file_address));
 
         strcat(file_address, "./MAIN_OUTPUT/STREAM_OUTPUT/FUSED_"); 
-        sprintf(file_name, "Stream_%d_Scale_%d_Game_%s_%d.ppm", STREAM_COUNT, scale, game_name, s);
+            sprintf(file_name, "Streams_%d_Scale_%d_Stream_%d.ppm", STREAM_COUNT, scale, STREAM_COUNT-1);
         strcat(file_address, file_name);
 
         unsigned char* Streamed_Img = (unsigned char*)readPPM(file_address, &width, &height);
-            
-            
+        printf("Hi\n");
         Image_Compare(Serial_Img, Streamed_Img, 3, width, height);
-            
+        printf("Hi2\n");
+
+
+        free(Serial_Img);
+        free(Streamed_Img);
 
     }
 

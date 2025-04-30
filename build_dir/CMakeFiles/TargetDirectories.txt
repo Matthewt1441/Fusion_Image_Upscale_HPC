@@ -1,4 +1,5 @@
-/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir
-/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/MAIN_TEST_BENCH_Solution.dir
+/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/Streamed_Cuda_Solution.dir
+/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/Optimized_Cuda_Solution.dir
+/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/Serial_Fusion_Solution.dir
 /home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/edit_cache.dir
 /home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles/rebuild_cache.dir

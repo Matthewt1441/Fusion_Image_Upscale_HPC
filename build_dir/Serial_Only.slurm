@@ -41,10 +41,10 @@ GAMES[1]=./LAD/images;
 GAMES[2]=./LM/images;
 
 SCALES[0]=2;
-# SCALES[1]=3;
-# SCALES[2]=4;
-# SCALES[3]=6;
-# SCALES[4]=8;
+SCALES[1]=3;
+SCALES[2]=4;
+SCALES[3]=6;
+SCALES[4]=8;
 
 start_frame=1;
 end_frame=15;
@@ -63,24 +63,24 @@ do
   file=serial_code_NV_$((scale)).txt
   ./Serial_Fusion_Solution $scale ./NV/images "NV" $start_frame $end_frame -t vector > MAIN_OUTPUT/SERIAL_OUTPUT/$file
 
-  # Optimized Code
-  file=optimized_code_LM_$((scale)).txt
-  ./Optimized_Cuda_Solution $scale ./LM/images "LM" $start_frame $end_frame -t vector > MAIN_OUTPUT/OPTIMIZED_OUTPUT/$file
+  # # Optimized Code
+  # file=optimized_code_LM_$((scale)).txt
+  # ./Optimized_Cuda_Solution $scale ./LM/images "LM" $start_frame $end_frame -t vector > MAIN_OUTPUT/OPTIMIZED_OUTPUT/$file
   
-  file=optimized_code_LAD_$((scale)).txt
-  ./Optimized_Cuda_Solution $scale ./LAD/images "LAD" $start_frame $end_frame -t vector > MAIN_OUTPUT/OPTIMIZED_OUTPUT/$file
+  # file=optimized_code_LAD_$((scale)).txt
+  # ./Optimized_Cuda_Solution $scale ./LAD/images "LAD" $start_frame $end_frame -t vector > MAIN_OUTPUT/OPTIMIZED_OUTPUT/$file
   
-  file=optimized_code_NV_$((scale)).txt
-  ./Optimized_Cuda_Solution $scale ./NV/images "NV" $start_frame $end_frame -t vector > MAIN_OUTPUT/OPTIMIZED_OUTPUT/$file
+  # file=optimized_code_NV_$((scale)).txt
+  # ./Optimized_Cuda_Solution $scale ./NV/images "NV" $start_frame $end_frame -t vector > MAIN_OUTPUT/OPTIMIZED_OUTPUT/$file
 
-  # Streamed Code
-  file=streamed_code_LM_$((scale)).txt
-  ./Streamed_Cuda_Solution $scale ./LM/images "LM" $start_frame $end_frame 3 -t vector > MAIN_OUTPUT/STREAM_OUTPUT/$file
+  # # Streamed Code
+  # file=streamed_code_LM_$((scale)).txt
+  # ./Streamed_Cuda_Solution $scale ./LM/images "LM" $start_frame $end_frame 3 -t vector > MAIN_OUTPUT/STREAM_OUTPUT/$file
   
-  file=streamed_code_LAD_$((scale)).txt
-  ./Streamed_Cuda_Solution $scale ./LAD/images "LAD" $start_frame $end_frame 3 -t vector > MAIN_OUTPUT/STREAM_OUTPUT/$file
+  # file=streamed_code_LAD_$((scale)).txt
+  # ./Streamed_Cuda_Solution $scale ./LAD/images "LAD" $start_frame $end_frame 3 -t vector > MAIN_OUTPUT/STREAM_OUTPUT/$file
   
-  file=streamed_code_NV_$((scale)).txt
-  ./Streamed_Cuda_Solution $scale ./NV/images "NV" $start_frame $end_frame 3 -t vector > MAIN_OUTPUT/STREAM_OUTPUT/$file
+  # file=streamed_code_NV_$((scale)).txt
+  # ./Streamed_Cuda_Solution $scale ./NV/images "NV" $start_frame $end_frame 3 -t vector > MAIN_OUTPUT/STREAM_OUTPUT/$file
 
 done

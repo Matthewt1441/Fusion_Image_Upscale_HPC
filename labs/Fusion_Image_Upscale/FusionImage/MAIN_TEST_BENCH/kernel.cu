@@ -89,12 +89,24 @@ __global__ void rgbaToRGB_Kernel(unsigned char* d_rgb_img, RGBA_t* d_rgba_img, i
     }
 }
 
+// BiCubic Interpolate Device Function
+//
+// Parameters:
+// 4x4 Pixel array
+// dy, dx
+//
+// The device function calculates the interpolated images based off the 4x4 array of pixels
+// First it interpolates across the points in the x axis to generate 4 points.
+// These new points are then used to inteprolate across the y axis to generate the final pixel.
+// Function includes clamping to ensure the pixel is not < 0 or > than 255.
+
 __device__ float bicubicInterpolateDevice_Shared(float p[4][4], float y, float x)
 {
-    float arr[4];
+    float arr[4];               //x interpolations array
     float temp;
-    float dx_half   = 0.5 * x;
+    float dx_half   = 0.5 * x;  //repeated calculation, saved to local register.
 
+    //interpolate across the x axis pixels.
     temp = p[0][1] + dx_half * (p[0][2] - p[0][0] + x * (2.0 * p[0][0] - 5.0 * p[0][1] + 4.0 * p[0][2] - p[0][3] + x * (3.0 * (p[0][1] - p[0][2]) + p[0][3] - p[0][0])));
     arr[0] = temp;
 
@@ -107,8 +119,11 @@ __device__ float bicubicInterpolateDevice_Shared(float p[4][4], float y, float x
     temp = p[3][1] + dx_half * (p[3][2] - p[3][0] + x * (2.0 * p[3][0] - 5.0 * p[3][1] + 4.0 * p[3][2] - p[3][3] + x * (3.0 * (p[3][1] - p[3][2]) + p[3][3] - p[3][0])));
     arr[3] = temp;
 
+    //interpolate across the y axis with the points generated from the x interpolations.
     temp =  arr[1] + 0.5 * y * (arr[2]  - arr[0]  + y * (2.0 * arr[0]  - 5.0 * arr[1]  + 4.0 * arr[2]  - arr[3]  + y * (3.0 * (arr[1]  - arr[2])  + arr[3]  - arr[0])));
 
+    //Clamping for the pixel value. Rather than using if-else statements, we multiply the float value by the condition.
+    //Avoids branching but adds additional computation.
     temp = temp * ((temp < 256.0) && (temp > -1.0)) + 255 * (temp > 255.0);//+ 0 * (temp < 0);
     return temp;
 }
@@ -208,61 +223,105 @@ __global__ void bicubicInterpolation_Shared_Memory_GreyCon_Kernel_RGBA(RGBA_t* b
 
 }
 
+// Nearest Neighbors + Greyscale Conversion With RGBA Struct
+//
+// Parameters:
+// RGBA pointer to upscaled image data
+// Unsigned Char pointer to greyscaled upscaled image data
+// RGBA pointer to input image data
+// Upscaled width and height
+// Input width and height
+// Integer scale value
+//
+// The kernel performs the nearest neighbors algorithm on the input image. Calculates the greyscale pixel value after upscaling.
+// Utilizes the RGBA struct to improve data coalescing
+
 __global__ void nearestNeighbors_GreyCon_Kernel_RGBA(RGBA_t* big_img_data, unsigned char* grey_big_img_data, RGBA_t* img_data, int big_width, int big_height, int width, int height, int scale)
 {
+    //Calculate the output pixel row and col for the thread
     int Row = blockIdx.y * blockDim.y + threadIdx.y;
     int Col = blockIdx.x * blockDim.x + threadIdx.x;
 
+    //Variables to store the x, y coordinates of the input image
     int small_x = 0;    int small_y = 0;
 
+    //Variable to store the reference pixel value
     RGBA_t rgba_val;
 
+    //If the thread is within the range of the output image
     if (Row < big_height && Col < big_width)
     {
+        //Calculate the x,y coordinates for the input image (nearest neighbors)
         small_x = Col / scale;
         small_y = Row / scale;
 
+        //Read the data from the input image
         rgba_val = img_data[small_y * width + small_x];
 
+        //Store data into the output array
         big_img_data[Row * big_width + Col] = rgba_val;
 
+        //Calculate the greyscale image
         grey_big_img_data[Row * big_width + Col] = 0.21f * rgba_val.r + 0.71f * rgba_val.g + 0.07f * rgba_val.b;
     }
 }
 
+// Artifact Detection (SSIM & Difference Map) Using Shared Memory
+//
+// Parameters:
+// Float pointer to artifact map
+// Unsigned Char pointer to first greyscaled upscaled image data
+// Unsigned Char pointer to second greyscaled upscaled image data
+// Image width and height
+//
+// The kernel performs the artifact map generation by calcualting the difference between the two upscaled images and then
+// calculating the SSIM for an 8x8 window.
+// All threads help store pixel data into shared memory so all threads can work together to compute the SSIM.
+
+// Parameters to SSIM calculation. Made as defines to reduce the need to compute it multiple times.
+// SSIM calculation uses 8x8 windows which transfers to the block dimension.
 #define WINDOW_SIZE     8
 #define WINDOW_PIXELS   64
+
 __global__ void Artifact_Shared_Memory_Kernel(float* artifact_map, unsigned char* img_1, unsigned char* img_2, int width, int height)
 {
-    //int window_size = 8;
-    //Window size dictates the size of structures that we can detect. Maybe should look into what effect this has
-    //on overall image quality & performance
-    // Consider the gaussian option with an 11x11 window
+
+    //Shared Memory for 8x8 image data. Stores the image data for both upscaled images.
+    // [         [IMG 1]                      [IMG 2]       ]
+    // INDEX 127.........INDEX 64....INDEX 63.........INDEX 0
 
     extern __shared__ float window_img[];
 
+    //Calculate artifact map output coordinates
     int Row = blockIdx.y * blockDim.y + threadIdx.y;
     int Col = blockIdx.x * blockDim.x + threadIdx.x;
 
+    //Store the TID for future use.
     int tid_x = threadIdx.x;
     int tid_y = threadIdx.y;
 
+    //Intermediate registers for calculating SSIM
     float sum1 = 0, sum2 = 0, sum1Sq = 0, sum2Sq = 0, sum12 = 0;
     float img_diff;
 
+    //Stores the amount of valid pixels when calcualting the mean of the 8x8 window.
     int valid_count = 0;
 
-    //For now, generate a smaller image.
-
+    //If the thread is within the output image
     if (Row < height && Col < width)
     {
-        sum1 = img_1[Row * width + Col];    //Using these as temp registers. Just pretend they are called temp1 & temp2
+        //Read pixel values from the two images
+        sum1 = img_1[Row * width + Col];    //Note: Using these as temp registers. Just pretend they are called temp1 & temp2
         sum2 = img_2[Row * width + Col];
+
+        //Store pixel values into the shared memory
         window_img[tid_y * WINDOW_SIZE + tid_x + WINDOW_PIXELS] = sum1;
         window_img[tid_y * WINDOW_SIZE + tid_x] = sum2;
+        
+        //Calculate the pixel difference
         img_diff = (float)abs((sum1 - sum2) / 255.0);
     }
-
+    // If the thread is out of bounds, store the pixel value as -1 to signify invalid pixel.
     else
     {
         window_img[tid_y * WINDOW_SIZE + tid_x + WINDOW_PIXELS] = -1;
@@ -271,36 +330,43 @@ __global__ void Artifact_Shared_Memory_Kernel(float* artifact_map, unsigned char
 
     sum1 = 0; sum2 = 0; //reset registers
 
-    __syncthreads();
+    __syncthreads();    //Sync point to ensure the 8x8 window in the shared memory is fully populated.
 
+    //8x8 Window For Loop
     for (int i = 0; i < 8; ++i)
     {
         for (int j = 0; j < 8; ++j)
         {
+            //If the image pixel is valid (>-1)
             if ((window_img[i * WINDOW_SIZE + j + WINDOW_PIXELS] >= 0) && (window_img[i * WINDOW_SIZE + j] >= 0))
             {
-                sum1 += window_img[i * WINDOW_SIZE + j + WINDOW_PIXELS];
-                sum2 += window_img[i * WINDOW_SIZE + j];
-                sum1Sq += window_img[i * WINDOW_SIZE + j + WINDOW_PIXELS] * window_img[i * WINDOW_SIZE + j + WINDOW_PIXELS];
-                sum2Sq += window_img[i * WINDOW_SIZE + j] * window_img[i * WINDOW_SIZE + j];
-                sum12 += window_img[i * WINDOW_SIZE + j + WINDOW_PIXELS] * window_img[i * WINDOW_SIZE + j];
-                valid_count++;
+                sum1 += window_img[i * WINDOW_SIZE + j + WINDOW_PIXELS];                                                        //IMG1 Sum
+                sum2 += window_img[i * WINDOW_SIZE + j];                                                                        //IMG2 Sum
+                sum1Sq += window_img[i * WINDOW_SIZE + j + WINDOW_PIXELS] * window_img[i * WINDOW_SIZE + j + WINDOW_PIXELS];    //IMG1 ^ 2 Sum    
+                sum2Sq += window_img[i * WINDOW_SIZE + j] * window_img[i * WINDOW_SIZE + j];                                    //IMG2 ^ 2 Sum
+                sum12 += window_img[i * WINDOW_SIZE + j + WINDOW_PIXELS] * window_img[i * WINDOW_SIZE + j];                     //IMG1 * IMG2 Sum
+                valid_count++;                                                                                                  //# of valid pixels
             }
         }
     }
 
+    //Calculate the mean of img1 and img2
     float mu1 = sum1 / valid_count;
     float mu2 = sum2 / valid_count;
+
+    //Calculate sigma for the imgs
     float sigma1Sq = (sum1Sq / valid_count) - (mu1 * mu1);
     float sigma2Sq = (sum2Sq / valid_count) - (mu2 * mu2);
     float sigma12 = (sum12 / valid_count) - (mu1 * mu2);
 
     // Stabilizing constants
-    float C1 = 6.5025; // (K1*L)^2, where K1=0.01 and L=255
-    float C2 = 58.5225; // (K2*L)^2, where K2=0.03 and L=255
+    float C1 = 6.5025;          // (K1*L)^2, where K1=0.01 and L=255
+    float C2 = 58.5225;         // (K2*L)^2, where K2=0.03 and L=255
 
+    //SSIM Equation
     float ssim = ((2 * mu1 * mu2 + C1) * (2 * sigma12 + C2)) / ((mu1 * mu1 + mu2 * mu2 + C1) * (sigma1Sq + sigma2Sq + C2));
 
+    //Calculate the artifact map pixel by multiplying the ssim index with the difference between the two images
     artifact_map[Row * width + Col] = ssim * img_diff;
 }
 

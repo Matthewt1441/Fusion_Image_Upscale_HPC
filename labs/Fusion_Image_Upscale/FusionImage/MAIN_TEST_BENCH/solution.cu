@@ -335,100 +335,37 @@ int optimized_version()
             cudaEventRecord(compute_Frame_Start, 0);    //BEGIN COMPUTATION FRAME TIMING
                                                         //Convert original image to RGBA image
             rgbToRGBA_Kernel << < RGB_Grid, RGB_Block, rgbToRGBA_Shared_Mem_Size >> > (d_RGBA_img, d_img, width * height);
-            //cudaDeviceSynchronize();
-
-            // error = cudaGetLastError();
-            // if(error != cudaSuccess)
-            // {
-            //     // print the CUDA error message and exit
-            //     printf("RGB -> RGBA CUDA error: %s\n", cudaGetErrorString(error));
-            //     exit(-1);
-            // }
 
             //PHASE 2 : Image Scaling
             nearestNeighbors_GreyCon_Kernel_RGBA                    <<< NN_Grid, NN_Block >>>                                   
                                 (d_big_img_nn, d_big_img_nn_grey, d_RGBA_img, big_width, big_height, width, height, scale);
             bicubicInterpolation_Shared_Memory_GreyCon_Kernel_RGBA  <<< BiCubic_Grid, BiCubic_Block, BiCubic_Shared_Mem_Size >>>
                                 (d_big_img_bic, d_big_img_bic_grey, d_RGBA_img, big_width, big_height, width, height, scale);
-            //cudaDeviceSynchronize();
-
-            // error = cudaGetLastError();
-            // if(error != cudaSuccess)
-            // {
-            //     // print the CUDA error message and exit
-            //     printf("NN & BICUBIC CUDA error: %s\n", cudaGetErrorString(error));
-            //     exit(-1);
-            // }
 
             //PHASE 3 : Image Artifact Detection
             Artifact_Shared_Memory_Kernel                           <<< Arti_Grid, Arti_Block, Arti_Shared_Mem_Size >>>         
                                 (d_big_artifact_map, d_big_img_nn_grey, d_big_img_bic_grey, big_width, big_height);
 
-            // cudaDeviceSynchronize();
-
-            // error = cudaGetLastError();
-            // if(error != cudaSuccess)
-            // {
-            //     // print the CUDA error message and exit
-            //     printf("ARTIFACT MAP CUDA error: %s\n", cudaGetErrorString(error));
-            //     exit(-1);
-            // }
 
             //PHASE 4 : Artifact Map Post Processing
             horizontalGaussianBlurConvolve  <<< h_Gauss_Grid, h_Gauss_Block, sizeof(float) * (h_Gauss_Block.x + GAUSS_Ksize - 1) * h_Gauss_Block.y >>>
                                 (d_big_blurred_artifact_map_inter, d_big_artifact_map, big_width, big_height, GAUSS_Ksize);
- 
-            // cudaDeviceSynchronize();
 
-            // error = cudaGetLastError();
-            // if(error != cudaSuccess)
-            // {
-            //     // print the CUDA error message and exit
-            //     printf("HORIZONTAL GAUSS CUDA error: %s\n", cudaGetErrorString(error));
-            //     exit(-1);
-            // }
 
             verticalGaussianBlurConvolve    <<< v_Gauss_Grid, v_Gauss_Block, sizeof(float) * (v_Gauss_Block.y + GAUSS_Ksize - 1) * v_Gauss_Block.x >>>
                                 (d_big_blurred_artifact_map, d_big_blurred_artifact_map_inter, big_width, big_height, 0.05, GAUSS_Ksize);
             
-            // cudaDeviceSynchronize();
-            
-            // error = cudaGetLastError();
-            // if(error != cudaSuccess)
-            // {
-            //     // print the CUDA error message and exit
-            //     printf("VERTICAL GAUSS CUDA error: %s\n", cudaGetErrorString(error));
-            //     exit(-1);
-            // }
-
 
             //PHASE 5 : Image Fusion
             Image_Fusion_Kernel_RGBA <<< RGB_Grid, RGB_Block >>>            
                                 (d_big_rgba_img_fused       , d_big_img_nn, d_big_img_bic   , d_big_blurred_artifact_map, big_width, big_height);
 
-            // cudaDeviceSynchronize();
-            
-            // error = cudaGetLastError();
-            // if(error != cudaSuccess)
-            // {
-            //     // print the CUDA error message and exit
-            //     printf("SEPERABLE CUDA error: %s\n", cudaGetErrorString(error));
-            //     exit(-1);
-            // }
 
             //PHASE 6 : Image Post Processing -> Convert Into Original Data Type
             rgbaToRGB_Kernel <<< RGB_Grid, RGB_Block, rgbaToRGB_Shared_Mem_Size>>> (d_big_img_fused, d_big_rgba_img_fused, big_width * big_height);
             cudaEventRecord(compute_Frame_End, 0);
             cudaEventSynchronize(compute_Frame_End);
             
-            // error = cudaGetLastError();
-            // if(error != cudaSuccess)
-            // {
-            //     // print the CUDA error message and exit
-            //     printf("RGBA -> RGB CUDA error: %s\n", cudaGetErrorString(error));
-            //     exit(-1);
-            // }
-
             //Send Device Images to Host
             cudaDeviceSynchronize();
             cudaMemcpy(h_big_img_fused, d_big_img_fused, sizeof(unsigned char) * big_width * big_height * 3, cudaMemcpyDeviceToHost);
@@ -476,6 +413,8 @@ int optimized_version()
 
         strcat(file_address, file_name);
         strcat(file_address, ".ppm");
+
+
 
         writePPM(file_address, (char*)h_big_img_fused, big_width, big_height);
 
@@ -726,8 +665,6 @@ int streamed_version()
             sprintf(file_name, "Stream_%d_Scale_%d_Game_%s_%d.ppm", STREAM_COUNT, scale, game_name, s);
             strcat(file_address, file_name);
             
-            //printf("%s\n", file_address);
-
             writePPM(file_address, (char*)h_big_img_fused[s], big_width, big_height);
             
             //************************* CLEAN UP *****************************//
@@ -744,6 +681,22 @@ int streamed_version()
             cudaFree(d_big_blurred_artifact_map_inter[s]);
             cudaFree(d_big_rgba_img_fused[s]);               cudaFree(d_big_img_fused[s]);
         }
+
+        unsigned char* Serial_Img = (unsigned char*)readPPM("./MAIN_OUTPUT/SERIAL_OUTPUT/FUSED.ppm", &width, &height);
+
+        //SAVE FINAL FRAMES
+        memset(file_address, 0, sizeof(file_address));
+
+        strcat(file_address, "./MAIN_OUTPUT/STREAM_OUTPUT/FUSED_"); 
+        sprintf(file_name, "Stream_%d_Scale_%d_Game_%s_%d.ppm", STREAM_COUNT, scale, game_name, s);
+        strcat(file_address, file_name);
+
+        unsigned char* Streamed_Img = (unsigned char*)readPPM(file_address, &width, &height);
+            
+            
+        Image_Compare(Serial_Img, Streamed_Img, 3, width, height);
+            
+
     }
 
     catch (const std::exception& e)

@@ -7,6 +7,16 @@
 #include <string>
 #include "util.cu"
 
+
+// RGB2Greyscale Function
+//
+// Parameters:
+// pointer to grayscale image
+// pointer to rgb image
+// width of input image
+// height of input image
+//
+// The function converts the rgb image to grayscale
 void RGB2Greyscale(unsigned char* grey_img, unsigned char* rgb_img, int width, int height)
 {
     int rgbidx = 0;
@@ -20,15 +30,14 @@ void RGB2Greyscale(unsigned char* grey_img, unsigned char* rgb_img, int width, i
     }
 }
 
-// cubicInterpolate Interpolate Function
+// cubicInterpolate Function
 //
 // Parameters:
 // 4 Pixel array
 // dx
 //
 // The function performs a cubic interpolation along one of the axis.
-// The funciton calculates the output pixel
-
+// Function includes clamping to ensure the pixel is not < 0 or > than 255.
 float cubicInterpolate(float p[4], float x) 
 {
     //Calculate the interpolated pixel
@@ -46,7 +55,16 @@ float cubicInterpolate(float p[4], float x)
     return 0.0;
 }
 
-//                               y  x
+// bicubicInterpolate Function
+//
+// Parameters:
+// 4x4 Pixel array
+// dy
+// dx
+//
+// The function performs 4 cubic interpolations along one of the axis.
+// Those values are then used to interpolate along the other axis
+// The funciton calculates the output pixel
 float bicubicInterpolate(float p[4][4], float y, float x) 
 {
     float arr[4];
@@ -57,22 +75,40 @@ float bicubicInterpolate(float p[4][4], float y, float x)
     return cubicInterpolate(arr, y);
 }
 
+// bicubicInterpolation Function
+//
+// Parameters:
+// pointer to larger output image
+// width of larger output image
+// height of larger output image
+// pointer to smaller input image
+// width of smaller input image
+// height of smaller input image
+// scale factor to upscale image by
+//
+// This function uses the smaller image data to interpolate a larger output image
+// It utilizes the bicubic interpolation technique by using a 4x4 window of pixel values to interpolate a number of intermediate points, based on the scale
 void bicubicInterpolation(unsigned char* big_img_data, int big_width, int big_height, unsigned char* img_data, int width, int height, int scale)
 {
+    // Define Windows for RGB values
     //             y  x
     float window_r[4][4];
     float window_g[4][4];
     float window_b[4][4];
 
+    // Input image x and y coordinates
     int input_x = 0;
     int input_y = 0;
 
+    // Window x and y coordinates
     int window_x = 0;
     int window_y = 0;
     
+    // Output x and y coordinates
     int output_x = 0;
     int output_y = 0;
 
+    //Set each window to 0.
     for (window_y = 0; window_y < 4; window_y++)
     {
         for (window_x = 0; window_x < 4; window_x++)
@@ -83,21 +119,29 @@ void bicubicInterpolation(unsigned char* big_img_data, int big_width, int big_he
         }
     }
 
+    //For Each Output Pixel
     for(output_y = 0; output_y < big_height; output_y++)
     {
         for(output_x = 0; output_x < big_width; output_x++)
         {
-            //Calculate starting index for windows
+            //Calculate interpolation point
             float interpolated_x = (float)(output_x / (scale * 1.0));
             float interpolated_y = (float)(output_y / (scale * 1.0));
 
+            //Calculate the nearest input pixel index
             int input_block_start_idx_x = (output_x / scale);
             int input_block_start_idx_y = (output_y / scale);
 
+            //Determine how far between input pixels to interpolate
             float dx = interpolated_x - input_block_start_idx_x;
             float dy = interpolated_y - input_block_start_idx_y;
 
-            //We are within a block of the input image, therefore fill windows
+            //Fill 4x4 windows with nearest pixels
+            // * = starting input pixel
+            // [ ][ ][ ][ ]
+            // [ ][*][ ][ ]
+            // [ ][ ][ ][ ]
+            // [ ][ ][ ][ ]
             for(window_y = -1; window_y < 3; window_y++)
             {
                 for(window_x = -1; window_x < 3; window_x++)
@@ -106,13 +150,13 @@ void bicubicInterpolation(unsigned char* big_img_data, int big_width, int big_he
                     input_x = input_block_start_idx_x + window_x;
                     input_y = input_block_start_idx_y + window_y;
 
-                    // Fill window with Nearest Neighbor edge behavior
+                    // Fill window with Nearest Neighbor if input index is out of range
                     if(input_x < 0 || input_x >= width)
                     {
                         // Find nearest in-bounds pixel
                         input_x = (input_x < 0) ? 0 : width - 1;
                     }
-                    // Fill window with Nearest Neighbor edge behavior
+                    // Fill window with Nearest Neighbor if input index is out of range
                     if(input_y < 0 || input_y >= height)
                     {
                         // Find nearest in-bounds pixel
@@ -125,10 +169,12 @@ void bicubicInterpolation(unsigned char* big_img_data, int big_width, int big_he
                 }
             }
 
+            //Use windows to interpolate output pixel
             float r = bicubicInterpolate(window_r, dy, dx);
             float g = bicubicInterpolate(window_g, dy, dx);
             float b = bicubicInterpolate(window_b, dy, dx);
 
+            //Write to output image
             big_img_data[3 * (output_y * big_width + output_x) + 0] = (unsigned char)r;
             big_img_data[3 * (output_y * big_width + output_x) + 1] = (unsigned char)g;
             big_img_data[3 * (output_y * big_width + output_x) + 2] = (unsigned char)b;
@@ -353,17 +399,21 @@ void Map2Greyscale(unsigned char* grey_img, float* map, int width, int height, i
     }
 }
 
+// GaussianBlur_Map
+//
+// Parameters:
+// Float pointer to the output blurred map
+// Float pointer to the input map
+// Upscaled width and height
+// radius and sigma used for guassian blur kernel
 void GaussianBlur_Map(float* blur_map, float* input_map, int width, int height, int radius, float sigma)
 {
-    //Generate Normalized Gaussian Kernal for blurring. This may need to be adjusted so I'll make it flexible.
-    //We can eventually hardcode this when we settle on ideal blur.
+    //Generate Normalized Gaussian Kernal for blurring.
     int kernel_size = 2 * radius + 1;
     int kernel_center = kernel_size / 2;
     float sum = 0.0;
     float* gaussian_kernel = (float*)malloc(sizeof(float) * kernel_size * kernel_size);
-
-    float my_PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164062;
-
+    float my_PI = 3.1415926;
     for (int y = 0; y < kernel_size; y++)
     {
         for (int x = 0; x < kernel_size; x++)
@@ -374,15 +424,14 @@ void GaussianBlur_Map(float* blur_map, float* input_map, int width, int height, 
         }
     }
     //Normalize
-    //May not want to do this as edge cases will not utilize entire kernel.
-    //Will try for now. It may be the right way to do it. I don't know for sure.
     for (int i = 0; i < kernel_size; i++) {
         for (int j = 0; j < kernel_size; j++) {
             gaussian_kernel[i * kernel_size + j] /= sum;
         }
     }
 
-    //Run through image with kernel centered at current pixel
+
+    //Convolve image with kernel centered at current pixel
     for (int y = 0; y < height; y++)
     {
         for (int x = 0; x < width; x++)

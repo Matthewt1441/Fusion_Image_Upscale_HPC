@@ -7,6 +7,15 @@
 #include <string>
 #include "util.cu"
 
+// RGB2Greyscale Kernel
+//
+// Parameters:
+// pointer to rgb image
+// pointer to grayscale image
+// width of input image
+// height of input image
+//
+// The function converts the rgb image to grayscale
 __global__ void RGB2GreyscaleKernel(unsigned char* rgb_img, unsigned char* grey_img, int width, int height)
 {
     int Row = blockIdx.y * blockDim.y + threadIdx.y;
@@ -20,7 +29,14 @@ __global__ void RGB2GreyscaleKernel(unsigned char* rgb_img, unsigned char* grey_
 }
 
 
-//Initial Naive approach
+// rgbToRGBA_Kernel
+//
+// Parameters:
+// pointer to array of RGBA structs
+// pointer to rgb image
+// total number of pixels
+//
+// The function converts the rgb array to an array of RGBA structs. These structs are padded to be 32-bits in length.
 __global__ void rgbToRGBA_Kernel(RGBA_t* d_RGBA_img, unsigned char* d_rgb_img, int numpixels)
 {
     // Each thread processes one pixel
@@ -58,7 +74,14 @@ __global__ void rgbToRGBA_Kernel(RGBA_t* d_RGBA_img, unsigned char* d_rgb_img, i
 }
 
 
-//Initial Naive approach
+// rgbaToRGB_Kernel
+//
+// Parameters:
+// pointer to rgb image
+// pointer to array of RGBA structs
+// total number of pixels
+//
+// The function converts the rgba struct array to an array of RGB values.
 __global__ void rgbaToRGB_Kernel(unsigned char* d_rgb_img, RGBA_t* d_rgba_img, int numpixels)
 {
     // Each thread processes one pixel
@@ -128,49 +151,73 @@ __device__ float bicubicInterpolateDevice_Shared(float p[4][4], float y, float x
     return temp;
 }
 
-//Run with block sizes that are multiples of the scale
+// bicubicInterpolation_Shared_Memory_GreyCon_Kernel_RGBA
+//
+// Parameters:
+// pointer to larger output image
+// pointer to larger output gray image
+// pointer to smaller input image
+// width of larger output image
+// height of larger output image
+// width of smaller input image
+// height of smaller input image
+// scale factor to upscale image by
+//
+// This kernel uses the smaller image data to interpolate a larger output image
+// It utilizes the bicubic interpolation technique by using a 4x4 window of pixel values to interpolate a number of intermediate points, based on the scale
+// This kernel utilizes shared memory and is expected to be ran with block sizes that are multiples of the scale.
+// Shared Memory Size if based on the block size
 __global__ void bicubicInterpolation_Shared_Memory_GreyCon_Kernel_RGBA(RGBA_t* big_img_data, unsigned char* grey_big_img_data, RGBA_t* img_data, int big_width, int big_height, int width, int height, int scale)
 {
-
+    
+    //Calculate the output pixel row and col for the thread
     int Row = blockIdx.y * blockDim.y + threadIdx.y;
     int Col = blockIdx.x * blockDim.x + threadIdx.x;
  
+    // Input image x and y coordinates
     int g_input_x = 0;
     int g_input_y = 0;
     
+    // Output image x and y coordinates
     int g_output_x = Col;
     int g_output_y = Row;
 
+    // X and Y coordinates of the shared memory tile
     int tile_input_x = 0;
     int tile_input_y = 0;
     
+    // X and Y coordinates for the window used for interpolation
     int window_x = 0;
     int window_y = 0;
 
-    //Only based on Block Size
+    //Calculate the width and heigh of the shared memory tile
+    //Becuae kernel is ran with a scale multiple block dimension, this is only based on Block Size
     int tile_width = (blockDim.x / scale) + 3;
     int tile_height = (blockDim.y / scale) + 3;
     extern __shared__ RGBA_t s_tile[];
 
+    //4x4 windows each thread will use to interpolate over
     float window_r[4][4];
     float window_g[4][4];
     float window_b[4][4];
 
+    //Temp RGBA val
     RGBA_t rgba_val;
 
+    //Fill Shared memory with input pixels
     if(threadIdx.x < tile_width && threadIdx.y < tile_height)
     {
         //Calculate Global Input Index
         g_input_x = blockIdx.x * (blockDim.x / scale) + threadIdx.x - 1;
         g_input_y = blockIdx.y * (blockDim.y / scale) + threadIdx.y - 1;
 
-        // Fill window with Nearest Neighbor edge behavior
+        // Fill tile with Nearest Neighbor if input index is out of range
         if(g_input_x < 0 || g_input_x >= width)
         {
             // Find nearest in-bounds pixel
             g_input_x = (g_input_x < 0) ? 0 : width - 1;
         }
-        // Fill window with Nearest Neighbor edge behavior
+        // Fill tile with Nearest Neighbor if input index is out of range
         if(g_input_y < 0 || g_input_y >= height)
         {
             // Find nearest in-bounds pixel
@@ -181,20 +228,23 @@ __global__ void bicubicInterpolation_Shared_Memory_GreyCon_Kernel_RGBA(RGBA_t* b
     }
     __syncthreads();
 
+    //For each output pixel within range
     if(g_output_y < big_height && g_output_x < big_width)
     {
-        //Calculate starting index for windows (funky stuff to remove shift)
+        //Calculate interpolation point
+        //Add shift to prevent final upscaled image from being shifted
         float interpolated_x = (((float)threadIdx.x + 0.5f) / (float)scale - 0.5f);
         float interpolated_y = (((float)threadIdx.y + 0.5f) / (float)scale - 0.5f);
 
-        //Round down to nearest index
+        //Calculate the nearest input pixel index
         int interpolated_idx_x = interpolated_x;
         int interpolated_idx_y = interpolated_y;
 
+        //Determine how far between input pixels to interpolate
         float dx = interpolated_x - interpolated_idx_x;
         float dy = interpolated_y - interpolated_idx_y;
 
-        //Fill local window with tiled input data
+        //Fill local window with tiled input data, this will always be inbound as tile is padded
         for(window_y = -1; window_y < 3; window_y++)
         {
             for(window_x = -1; window_x < 3; window_x++)
@@ -203,6 +253,7 @@ __global__ void bicubicInterpolation_Shared_Memory_GreyCon_Kernel_RGBA(RGBA_t* b
                 tile_input_x = interpolated_idx_x + window_x + 1;
                 tile_input_y = interpolated_idx_y + window_y + 1;
 
+                //Read pixel value
                 rgba_val = s_tile[tile_input_y * tile_width + tile_input_x];
 
                 window_r[window_y + 1][window_x + 1] = (float)rgba_val.r;    //R
@@ -211,12 +262,15 @@ __global__ void bicubicInterpolation_Shared_Memory_GreyCon_Kernel_RGBA(RGBA_t* b
             }
         }
 
+        //Use windows to interpolate output pixel
         rgba_val.r = (unsigned char)bicubicInterpolateDevice_Shared(window_r, dy, dx);
         rgba_val.g = (unsigned char)bicubicInterpolateDevice_Shared(window_g, dy, dx);
         rgba_val.b = (unsigned char)bicubicInterpolateDevice_Shared(window_b, dy, dx);
 
+        //Write to output image
         big_img_data[g_output_y * big_width + g_output_x] = rgba_val;
 
+        //Convert RGBA value to gray scale
         grey_big_img_data[g_output_y * big_width + g_output_x] = 0.21f * rgba_val.r + 0.71f * rgba_val.g + 0.07f * rgba_val.b;
 
     }
@@ -370,10 +424,24 @@ __global__ void Artifact_Shared_Memory_Kernel(float* artifact_map, unsigned char
     artifact_map[Row * width + Col] = ssim * img_diff;
 }
 
+// Define in Constant Memory the 1D Guassian Blur Kernel
 __constant__ float d_gauss_kernel_seperable[7] = { 0.0366328470,   0.111280762,    0.216745317,    0.270682156,    0.216745317,    0.111280762,    0.0366328470 };
 
+
+// horizontalGaussianBlurConvolve
+//
+// Parameters:
+// Float pointer to output blur map
+// Float pointer to input artifact map
+// Image width and height
+// Size of Guassian Blur Kernel (always 7)
+//
+// The kernel performs the horizontal convolution of the guassian blur across the input artifact map.
+// All threads help store input data into shared memory.
+// This kernel is launched with 1 thread per output
 __global__ void horizontalGaussianBlurConvolve(float* blur_map, float* input_map, int width, int height, int ksize)
 {
+    //Output Coordinates and Input thread id
     int Row = blockIdx.y * blockDim.y + threadIdx.y;
     int Col = blockIdx.x * blockDim.x + threadIdx.x;
     int tidx = threadIdx.x;
@@ -383,19 +451,19 @@ __global__ void horizontalGaussianBlurConvolve(float* blur_map, float* input_map
     // Tile Width   = Block_Width + KSize - 1
     // Tile Height  = Block_Height
     extern __shared__ float s_tile_h[];
-
     int tile_width  = blockDim.x + ksize - 1;
     int tile_height = blockDim.y;
     int radius = ksize/2;
-
 
     //Fill Input Tile by striding through the input array
     int tile_input_idx_x = tidx;
     int tile_input_idx_y = tidy;
     while(tile_input_idx_x < tile_width)
     {
+        // Calculate input x index. 
         int g_input_idx_x = (tile_input_idx_x - radius) + blockIdx.x * blockDim.x;
 
+        // Fill Tile with 0 if input index is out of range
         if (g_input_idx_x >= 0 && g_input_idx_x < width) 
         {
             s_tile_h[tile_input_idx_y * tile_width + tile_input_idx_x] = input_map[Row * width + g_input_idx_x];
@@ -429,8 +497,21 @@ __global__ void horizontalGaussianBlurConvolve(float* blur_map, float* input_map
     }
 }
 
+
+// verticalGaussianBlurConvolve
+//
+// Parameters:
+// Float pointer to output blur map
+// Float pointer to partially blurred input map
+// Image width and height
+// Size of Guassian Blur Kernel (always 7)
+//
+// The kernel performs the vertical convolution of the guassian blur across the input artifact map.
+// All threads help store input data into shared memory.
+// This kernel is launched with 1 thread per output
 __global__ void verticalGaussianBlurConvolve(float* blur_map, float* input_map, int width, int height, float threshold, int ksize)
 {
+    //Output Coordinates and Input thread id
     int Row = blockIdx.y * blockDim.y + threadIdx.y;
     int Col = blockIdx.x * blockDim.x + threadIdx.x;
     int tidx = threadIdx.x;
@@ -440,7 +521,6 @@ __global__ void verticalGaussianBlurConvolve(float* blur_map, float* input_map, 
     // Tile Width   = Block_Width
     // Tile Height  = Block_Height + KSize - 1
     extern __shared__ float s_tile_v[];
-
     int tile_width  = blockDim.x;
     int tile_height = blockDim.y + ksize - 1;
     int radius = ksize/2;
@@ -450,8 +530,10 @@ __global__ void verticalGaussianBlurConvolve(float* blur_map, float* input_map, 
     int tile_input_idx_y = tidy;
     while(tile_input_idx_y < tile_height)
     {
+        // Calculate input y index. 
         int g_input_idx_y = (tile_input_idx_y - radius) + blockIdx.y * blockDim.y;
 
+        // Fill Tile with 0 if input index is out of range
         if (g_input_idx_y >= 0 && g_input_idx_y < height) 
         {
             s_tile_v[tile_input_idx_y * tile_width + tile_input_idx_x] = input_map[g_input_idx_y * width + Col];
@@ -485,79 +567,38 @@ __global__ void verticalGaussianBlurConvolve(float* blur_map, float* input_map, 
     }
 }
 
-__global__ void GaussianBlur_Threshold_Map_Naive_Kernel(float* blur_map, float* input_map, int width, int height, int radius, float sigma, float threshold)
-{
-    //Generate Normalized Gaussian Kernal for blurring. This may need to be adjusted so I'll make it flexible.
-    //We can eventually hardcode this when we settle on ideal blur.
-    int kernel_size = 2 * radius + 1;
-    int kernel_center = kernel_size / 2;
-    float sum = 0.0;
-    float gaussian_kernel[49] = { 0 };
-
-    int Row = blockIdx.y * blockDim.y + threadIdx.y;
-    int Col = blockIdx.x * blockDim.x + threadIdx.x;
-
-    float my_PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164062;
-
-    if (Row < height && Col < width)
-    {
-        for (int y = 0; y < kernel_size; y++)
-        {
-            for (int x = 0; x < kernel_size; x++)
-            {
-                double exponent = -((x - kernel_center) * (x - kernel_center) - (y - kernel_center) * (y - kernel_center)) / (2 * sigma * sigma);
-                gaussian_kernel[y * kernel_size + x] = exp(exponent) / (2 * my_PI * sigma * sigma);
-                sum += gaussian_kernel[y * kernel_size + x];
-            }
-        }
-        //Normalize
-        //May not want to do this as edge cases will not utilize entire kernel.
-        //Will try for now. It may be the right way to do it. I don't know for sure.
-        for (int i = 0; i < kernel_size; i++)
-            for (int j = 0; j < kernel_size; j++)
-                gaussian_kernel[i * kernel_size + j] /= sum;
-
-        sum = 0.0;
-
-        for (int i = 0; i < kernel_size; i++) {
-            for (int j = 0; j < kernel_size; j++) {
-                int map_y = Row + i - radius; //
-                int map_x = Col + j - radius;
-
-                //If we are within the image
-                if (map_x >= 0 && map_x < width && map_y >= 0 && map_y < height) {
-                    sum += input_map[map_y * width + map_x] * gaussian_kernel[i * kernel_size + j];
-                }
-            }
-        }
-
-        blur_map[Row * width + Col] = (sum > threshold) ? 1.0 : 0.0;
-    }
-}
-
+// Image_Fusion_Kernel_RGBA
+//
+// Parameters:
+// pointer to Fused Image
+// pointer to Upscaling Image Method 1
+// pointer to Upscaling Image Method 2
+// Float pointer Artifact Map
+// Upscaled width and height
+//
+// The fusion algorithm takes the two upscaled images and multiplies one image by the weight map and the other by its inverse
 __global__ void Image_Fusion_Kernel_RGBA(RGBA_t* fused_img, RGBA_t* img_1, RGBA_t* img_2, float* weight_map, int width, int height)
 {
-    //int Row = blockIdx.y * blockDim.y + threadIdx.y;
-    //int Col = blockIdx.x * blockDim.x + threadIdx.x;
-
+    //Output index
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
 
-    //int map_idx = Row * width + Col;
-    //int img_idx = 3 * map_idx;
+    //Pixel parameters
     RGBA_t rgba_pxl1;
     RGBA_t rgba_pxl2;
     RGBA_t rgba_fused;
 
-    //if (Row < height && Col < width)
     if( idx < width*height)
     {
+        //Read from both input images
         rgba_pxl1 = img_1[idx];
         rgba_pxl2 = img_2[idx];
 
+        //Use weight map to fuse two images
         rgba_fused.r = rgba_pxl1.r * weight_map[idx] + rgba_pxl2.r * (1.0 - weight_map[idx]);
         rgba_fused.g = rgba_pxl1.g * weight_map[idx] + rgba_pxl2.g * (1.0 - weight_map[idx]);
         rgba_fused.b = rgba_pxl1.b * weight_map[idx] + rgba_pxl2.b * (1.0 - weight_map[idx]);
 
+        //Write output pixel
         fused_img[idx] = rgba_fused;
     }
 }

@@ -278,16 +278,18 @@ int main(int argc, char* argv[])
 
         unsigned char* Serial_Img = (unsigned char*)readPPM("./MAIN_OUTPUT/SERIAL_OUTPUT/FUSED.ppm", &width, &height);
 
-        //SAVE FINAL FRAMES
+        //Load Final Image from the last stream.
         memset(file_address, 0, sizeof(file_address));
-
         strcat(file_address, "./MAIN_OUTPUT/STREAM_OUTPUT/FUSED_"); 
-            sprintf(file_name, "Streams_%d_Scale_%d_Stream_%d.ppm", STREAM_COUNT, scale, STREAM_COUNT-1);
+        sprintf(file_name, "Streams_%d_Scale_%d_Stream_%d.ppm", STREAM_COUNT, scale, STREAM_COUNT-1);
         strcat(file_address, file_name);
-
         unsigned char* Streamed_Img = (unsigned char*)readPPM(file_address, &width, &height);
+
+        //Compare Images with Serial Output
         Image_Compare(Serial_Img, Streamed_Img, 3, big_width, big_height);
-        printf("Hi2\n");
+
+        free(Serial_Img);
+        free(Streamed_Img);
     }
 
     catch (const std::exception& e)

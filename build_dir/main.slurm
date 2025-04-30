@@ -31,20 +31,18 @@
 ###module load cuda11/11.0
 
 ### set directory for job execution, replace the following path with your own path
-hw_path=~kylerm23/ece569/Fusion_Image_Upscale_HPC/build_dir
+hw_path=~matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir
 
 cd $hw_path
 
 
-GAMES[0]=./NV/image;
-GAMES[1]=./LAD/LAD_;
-GAMES[2]=./LM_Frame/image;
+GAMES[0]=./NV/images;
+GAMES[1]=./LAD/images;
+GAMES[2]=./LM/images;
 
 GAMENAMES[0]="FALLOUT_NEW_VEGAS";
 GAMENAMES[1]="LIKE_A_DRAGON_INFINITE_WEALTH";
 GAMENAMES[2]="LUIGIS_MANSION";
-
-GAME_COUNT=0;
 
 SCALES[0]=2;
 SCALES[1]=3;
@@ -52,14 +50,8 @@ SCALES[2]=4;
 SCALES[3]=6;
 SCALES[4]=8;
 
-STREAMS[0]=2;
-STREAMS[1]=3;
-STREAMS[2]=4;
-STREAMS[3]=5;
-STREAMS[4]=6;
-
 start_frame=1;
-end_frame=175;
+end_frame=30;
 
 LOOPS[0]=1;
 LOOPS[1]=2;

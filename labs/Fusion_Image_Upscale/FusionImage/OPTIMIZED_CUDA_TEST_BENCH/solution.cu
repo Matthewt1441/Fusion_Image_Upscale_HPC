@@ -270,7 +270,7 @@ int main(int argc, char* argv[])
 
         memset(file_address, 0, sizeof(file_address));
         strcat(file_address, "./MAIN_OUTPUT/OPTIMIZED_OUTPUT/FUSED_"); 
-        sprintf(file_name, "Scale_%d_Game_%s", scale, game_name);
+        sprintf(file_name, "Frame%d_Scale_%d_Game_%s", end_frame, scale, game_name);
         strcat(file_address, file_name);
         strcat(file_address, ".ppm");
 
@@ -295,11 +295,18 @@ int main(int argc, char* argv[])
         cudaFree(d_big_rgba_img_fused);
         cudaFree(d_big_img_fused);
 
-        unsigned char* Serial_Img = (unsigned char*)readPPM("./MAIN_OUTPUT/SERIAL_OUTPUT/FUSED.ppm", &width, &height);
-        
+
         //Load Final Image
         unsigned char* Optimized_Img = (unsigned char*)readPPM(file_address, &width, &height);
-        
+
+        strcpy(game_name, argv[3]);     //copy game name into the var
+        memset(file_address, 0, sizeof(file_address));
+        strcat(file_address, "./MAIN_OUTPUT/SERIAL_OUTPUT/FUSED_"); 
+        sprintf(file_name, "Frame%d_Scale_%d_Game_%s", end_frame, scale, game_name);
+        strcat(file_address, file_name);
+        strcat(file_address, ".ppm");
+        unsigned char* Serial_Img = (unsigned char*)readPPM(file_address, &width, &height);
+           
         //Compare Images with Serial Output
         Image_Compare(Serial_Img, Optimized_Img, 3, big_width, big_height);
 

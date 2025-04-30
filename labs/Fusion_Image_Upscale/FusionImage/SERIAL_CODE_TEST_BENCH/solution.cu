@@ -162,7 +162,7 @@ int main(int argc, char* argv[])
 
         //************************* CLEAN UP *****************************//
         printf("FINAL SERIAL CODE FPS, %f, Total Execution Time for %d frames, %f, s\n", average_fps, end_frame - start_frame + 1, processing_time);
-        writePPM("./MAIN_OUTPUT/SERIAL_OUPUT/FUSED.ppm", (char*)h_big_img_fused, big_width, big_height);
+        writePPM("./MAIN_OUTPUT/SERIAL_OUTPUT/FUSED.ppm", (char*)h_big_img_fused, big_width, big_height);
 
 
         //Free Host Memory

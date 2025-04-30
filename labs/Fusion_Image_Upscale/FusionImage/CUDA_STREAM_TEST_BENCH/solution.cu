@@ -255,7 +255,7 @@ int main(int argc, char* argv[])
             strcpy(game_name, argv[3]);     //copy game name into the var
 
             strcat(file_address, "./MAIN_OUTPUT/STREAM_OUTPUT/FUSED_"); 
-            sprintf(file_name, "Streams_%d_Scale_%d_Stream_%d.ppm", STREAM_COUNT, scale, s);
+            sprintf(file_name, "Streams_%d_Scale_%d_Game_%s_StreamId_%d.ppm", STREAM_COUNT, scale, game_name, s);
             strcat(file_address, file_name);
             
             //printf("%s\n", file_address);
@@ -279,9 +279,10 @@ int main(int argc, char* argv[])
         unsigned char* Serial_Img = (unsigned char*)readPPM("./MAIN_OUTPUT/SERIAL_OUTPUT/FUSED.ppm", &width, &height);
 
         //Load Final Image from the last stream.
+        strcpy(game_name, argv[3]);     //copy game name into the var
         memset(file_address, 0, sizeof(file_address));
         strcat(file_address, "./MAIN_OUTPUT/STREAM_OUTPUT/FUSED_"); 
-        sprintf(file_name, "Streams_%d_Scale_%d_Stream_%d.ppm", STREAM_COUNT, scale, STREAM_COUNT-1);
+        sprintf(file_name, "Streams_%d_Scale_%d_Game_%s_StreamId_%d.ppm", STREAM_COUNT, scale, game_name, STREAM_COUNT-1);
         strcat(file_address, file_name);
         unsigned char* Streamed_Img = (unsigned char*)readPPM(file_address, &width, &height);
 

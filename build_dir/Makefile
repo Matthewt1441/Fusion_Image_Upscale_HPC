@@ -117,17 +117,30 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution
+# Target rules for targets named MAIN_TEST_BENCH_Solution
 
 # Build rule for target.
-NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution
-.PHONY : NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution
+MAIN_TEST_BENCH_Solution: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 MAIN_TEST_BENCH_Solution
+.PHONY : MAIN_TEST_BENCH_Solution
 
 # fast build rule for target.
-NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution.dir/build.make CMakeFiles/NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution.dir/build
-.PHONY : NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution/fast
+MAIN_TEST_BENCH_Solution/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MAIN_TEST_BENCH_Solution.dir/build.make CMakeFiles/MAIN_TEST_BENCH_Solution.dir/build
+.PHONY : MAIN_TEST_BENCH_Solution/fast
+
+#=============================================================================
+# Target rules for targets named CUDA_STREAM_TEST_BENCH_Solution
+
+# Build rule for target.
+CUDA_STREAM_TEST_BENCH_Solution: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CUDA_STREAM_TEST_BENCH_Solution
+.PHONY : CUDA_STREAM_TEST_BENCH_Solution
+
+# fast build rule for target.
+CUDA_STREAM_TEST_BENCH_Solution/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/build.make CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/build
+.PHONY : CUDA_STREAM_TEST_BENCH_Solution/fast
 
 # Help Target
 help:
@@ -137,7 +150,8 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution"
+	@echo "... CUDA_STREAM_TEST_BENCH_Solution"
+	@echo "... MAIN_TEST_BENCH_Solution"
 .PHONY : help
 
 

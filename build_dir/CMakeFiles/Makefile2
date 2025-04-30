@@ -63,7 +63,8 @@ CMAKE_BINARY_DIR = /home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution.dir/all
+all: CMakeFiles/MAIN_TEST_BENCH_Solution.dir/all
+all: CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -71,34 +72,61 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution.dir/clean
+clean: CMakeFiles/MAIN_TEST_BENCH_Solution.dir/clean
+clean: CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/clean
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution.dir
+# Target rules for target CMakeFiles/MAIN_TEST_BENCH_Solution.dir
 
 # All Build rule for target.
-CMakeFiles/NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution.dir/build.make CMakeFiles/NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution.dir/build.make CMakeFiles/NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles --progress-num=1,2 "Built target NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution"
-.PHONY : CMakeFiles/NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution.dir/all
+CMakeFiles/MAIN_TEST_BENCH_Solution.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MAIN_TEST_BENCH_Solution.dir/build.make CMakeFiles/MAIN_TEST_BENCH_Solution.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MAIN_TEST_BENCH_Solution.dir/build.make CMakeFiles/MAIN_TEST_BENCH_Solution.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles --progress-num=3,4 "Built target MAIN_TEST_BENCH_Solution"
+.PHONY : CMakeFiles/MAIN_TEST_BENCH_Solution.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution.dir/rule: cmake_check_build_system
+CMakeFiles/MAIN_TEST_BENCH_Solution.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/MAIN_TEST_BENCH_Solution.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles 0
-.PHONY : CMakeFiles/NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution.dir/rule
+.PHONY : CMakeFiles/MAIN_TEST_BENCH_Solution.dir/rule
 
 # Convenience name for target.
-NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution: CMakeFiles/NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution.dir/rule
-.PHONY : NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution
+MAIN_TEST_BENCH_Solution: CMakeFiles/MAIN_TEST_BENCH_Solution.dir/rule
+.PHONY : MAIN_TEST_BENCH_Solution
 
 # clean rule for target.
-CMakeFiles/NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution.dir/build.make CMakeFiles/NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution.dir/clean
-.PHONY : CMakeFiles/NAIVE_CUDA_TEST_BENCH_TOGETHER_Solution.dir/clean
+CMakeFiles/MAIN_TEST_BENCH_Solution.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MAIN_TEST_BENCH_Solution.dir/build.make CMakeFiles/MAIN_TEST_BENCH_Solution.dir/clean
+.PHONY : CMakeFiles/MAIN_TEST_BENCH_Solution.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir
+
+# All Build rule for target.
+CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/build.make CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/build.make CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles --progress-num=1,2 "Built target CUDA_STREAM_TEST_BENCH_Solution"
+.PHONY : CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles 0
+.PHONY : CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/rule
+
+# Convenience name for target.
+CUDA_STREAM_TEST_BENCH_Solution: CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/rule
+.PHONY : CUDA_STREAM_TEST_BENCH_Solution
+
+# clean rule for target.
+CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/build.make CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/clean
+.PHONY : CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

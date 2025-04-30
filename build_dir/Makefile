@@ -117,6 +117,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named CUDA_STREAM_TEST_BENCH_Solution
+
+# Build rule for target.
+CUDA_STREAM_TEST_BENCH_Solution: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CUDA_STREAM_TEST_BENCH_Solution
+.PHONY : CUDA_STREAM_TEST_BENCH_Solution
+
+# fast build rule for target.
+CUDA_STREAM_TEST_BENCH_Solution/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/build.make CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/build
+.PHONY : CUDA_STREAM_TEST_BENCH_Solution/fast
+
+#=============================================================================
 # Target rules for targets named MAIN_TEST_BENCH_Solution
 
 # Build rule for target.
@@ -137,6 +150,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... CUDA_STREAM_TEST_BENCH_Solution"
 	@echo "... MAIN_TEST_BENCH_Solution"
 .PHONY : help
 

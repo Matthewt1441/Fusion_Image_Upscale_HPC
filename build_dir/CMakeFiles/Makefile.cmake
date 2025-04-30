@@ -10,9 +10,12 @@ set(CMAKE_MAKEFILE_DEPENDS
   "CMakeFiles/3.28.3/CMakeCCompiler.cmake"
   "CMakeFiles/3.28.3/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.28.3/CMakeSystem.cmake"
+  "CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/Fusion_Image_Upscale/FusionImage/CUDA_STREAM_TEST_BENCH/CUDA_STREAM_TEST_BENCH_Solution_generated_solution.cu.o.cmake.pre-gen"
+  "CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/Fusion_Image_Upscale/FusionImage/CUDA_STREAM_TEST_BENCH/CUDA_STREAM_TEST_BENCH_Solution_generated_solution.cu.o.depend"
   "CMakeFiles/MAIN_TEST_BENCH_Solution.dir/Fusion_Image_Upscale/FusionImage/MAIN_TEST_BENCH/MAIN_TEST_BENCH_Solution_generated_solution.cu.o.cmake.pre-gen"
   "CMakeFiles/MAIN_TEST_BENCH_Solution.dir/Fusion_Image_Upscale/FusionImage/MAIN_TEST_BENCH/MAIN_TEST_BENCH_Solution_generated_solution.cu.o.depend"
   "/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/labs/CMakeLists.txt"
+  "/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/labs/Fusion_Image_Upscale/FusionImage/CUDA_STREAM_TEST_BENCH/sources.cmake"
   "/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/labs/Fusion_Image_Upscale/FusionImage/MAIN_TEST_BENCH/sources.cmake"
   "/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/labs/Fusion_Image_Upscale/FusionImage/sources.cmake"
   "/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/labs/Fusion_Image_Upscale/sources.cmake"
@@ -54,12 +57,15 @@ set(CMAKE_MAKEFILE_OUTPUTS
 
 # Byproducts of CMake generate step:
 set(CMAKE_MAKEFILE_PRODUCTS
+  "CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/Fusion_Image_Upscale/FusionImage/CUDA_STREAM_TEST_BENCH/CUDA_STREAM_TEST_BENCH_Solution_generated_solution.cu.o.cmake.pre-gen"
   "CMakeFiles/MAIN_TEST_BENCH_Solution.dir/Fusion_Image_Upscale/FusionImage/MAIN_TEST_BENCH/MAIN_TEST_BENCH_Solution_generated_solution.cu.o.cmake.pre-gen"
+  "CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/Fusion_Image_Upscale/FusionImage/CUDA_STREAM_TEST_BENCH/CUDA_STREAM_TEST_BENCH_Solution_generated_solution.cu.o.Release.cmake"
   "CMakeFiles/MAIN_TEST_BENCH_Solution.dir/Fusion_Image_Upscale/FusionImage/MAIN_TEST_BENCH/MAIN_TEST_BENCH_Solution_generated_solution.cu.o.Release.cmake"
   "CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
+  "CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/DependInfo.cmake"
   "CMakeFiles/MAIN_TEST_BENCH_Solution.dir/DependInfo.cmake"
   )

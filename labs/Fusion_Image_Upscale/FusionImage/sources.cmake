@@ -1,2 +1,2 @@
-
+include(${CMAKE_CURRENT_LIST_DIR}/CUDA_STREAM_TEST_BENCH/sources.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/MAIN_TEST_BENCH/sources.cmake)

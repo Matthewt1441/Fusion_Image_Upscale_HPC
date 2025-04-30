@@ -747,7 +747,7 @@ int main(int argc, char* argv[])
 
     serial_version();
     optimized_version();
-    streamed_version();
+    //streamed_version();
 
 
     return 0;

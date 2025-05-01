@@ -41,9 +41,9 @@ GAMES[1]=./LAD/images;
 GAMES[2]=./LM/images;
 
 SCALES[0]=2;
-# SCALES[1]=3;
-# SCALES[2]=4;
-# SCALES[3]=6;
+SCALES[1]=3;
+SCALES[2]=4;
+SCALES[3]=6;
 # SCALES[4]=8;
 
 start_frame=1;
@@ -54,14 +54,14 @@ for scale in ${SCALES[@]}
 do
 
   # Serial Code
-  file=serial_code_LM_$((scale)).txt
-  ./Serial_Fusion_Solution $scale ./LM/images "LM" $start_frame $end_frame -t vector > MAIN_OUTPUT/SERIAL_OUTPUT/$file
+  # file=serial_code_LM_$((scale)).txt
+  # ./Serial_Fusion_Solution $scale ./LM/images "LM" $start_frame $end_frame -t vector > MAIN_OUTPUT/SERIAL_OUTPUT/$file
   
-  file=serial_code_LAD_$((scale)).txt
-  ./Serial_Fusion_Solution $scale ./LAD/images "LAD" $start_frame $end_frame -t vector > MAIN_OUTPUT/SERIAL_OUTPUT/$file
+  # file=serial_code_LAD_$((scale)).txt
+  # ./Serial_Fusion_Solution $scale ./LAD/images "LAD" $start_frame $end_frame -t vector > MAIN_OUTPUT/SERIAL_OUTPUT/$file
   
-  file=serial_code_NV_$((scale)).txt
-  ./Serial_Fusion_Solution $scale ./NV/images "NV" $start_frame $end_frame -t vector > MAIN_OUTPUT/SERIAL_OUTPUT/$file
+  # file=serial_code_NV_$((scale)).txt
+  # ./Serial_Fusion_Solution $scale ./NV/images "NV" $start_frame $end_frame -t vector > MAIN_OUTPUT/SERIAL_OUTPUT/$file
 
   # Optimized Code
   file=optimized_code_LM_$((scale)).txt

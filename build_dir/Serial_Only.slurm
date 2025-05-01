@@ -44,7 +44,7 @@ SCALES[0]=2;
 SCALES[1]=3;
 SCALES[2]=4;
 SCALES[3]=6;
-SCALES[4]=8;
+# SCALES[4]=8;
 
 start_frame=1;
 end_frame=15;

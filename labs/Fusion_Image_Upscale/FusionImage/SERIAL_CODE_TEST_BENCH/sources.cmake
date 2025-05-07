@@ -1,3 +1,2 @@
-
-add_lab("SERIAL_CODE_TEST_BENCH")
-add_lab_solution("SERIAL_CODE_TEST_BENCH" ${CMAKE_CURRENT_LIST_DIR}/solution.cu)
+add_lab("Serial_Fusion")
+add_lab_solution("Serial_Fusion" ${CMAKE_CURRENT_LIST_DIR}/solution.cu)

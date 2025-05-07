@@ -1,3 +1,2 @@
-
-add_lab("CUDA_STREAM_TEST_BENCH")
-add_lab_solution("CUDA_STREAM_TEST_BENCH" ${CMAKE_CURRENT_LIST_DIR}/solution.cu)
+add_lab("Streamed_Cuda")
+add_lab_solution("Streamed_Cuda" ${CMAKE_CURRENT_LIST_DIR}/solution.cu)

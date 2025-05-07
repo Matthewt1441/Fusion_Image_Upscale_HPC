@@ -63,8 +63,9 @@ CMAKE_BINARY_DIR = /home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/MAIN_TEST_BENCH_Solution.dir/all
-all: CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/all
+all: CMakeFiles/Streamed_Cuda_Solution.dir/all
+all: CMakeFiles/Optimized_Cuda_Solution.dir/all
+all: CMakeFiles/Serial_Fusion_Solution.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -72,61 +73,88 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/MAIN_TEST_BENCH_Solution.dir/clean
-clean: CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/clean
+clean: CMakeFiles/Streamed_Cuda_Solution.dir/clean
+clean: CMakeFiles/Optimized_Cuda_Solution.dir/clean
+clean: CMakeFiles/Serial_Fusion_Solution.dir/clean
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/MAIN_TEST_BENCH_Solution.dir
+# Target rules for target CMakeFiles/Streamed_Cuda_Solution.dir
 
 # All Build rule for target.
-CMakeFiles/MAIN_TEST_BENCH_Solution.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/MAIN_TEST_BENCH_Solution.dir/build.make CMakeFiles/MAIN_TEST_BENCH_Solution.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/MAIN_TEST_BENCH_Solution.dir/build.make CMakeFiles/MAIN_TEST_BENCH_Solution.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles --progress-num=3,4 "Built target MAIN_TEST_BENCH_Solution"
-.PHONY : CMakeFiles/MAIN_TEST_BENCH_Solution.dir/all
+CMakeFiles/Streamed_Cuda_Solution.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Streamed_Cuda_Solution.dir/build.make CMakeFiles/Streamed_Cuda_Solution.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Streamed_Cuda_Solution.dir/build.make CMakeFiles/Streamed_Cuda_Solution.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles --progress-num=5,6 "Built target Streamed_Cuda_Solution"
+.PHONY : CMakeFiles/Streamed_Cuda_Solution.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/MAIN_TEST_BENCH_Solution.dir/rule: cmake_check_build_system
+CMakeFiles/Streamed_Cuda_Solution.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/MAIN_TEST_BENCH_Solution.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/Streamed_Cuda_Solution.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles 0
-.PHONY : CMakeFiles/MAIN_TEST_BENCH_Solution.dir/rule
+.PHONY : CMakeFiles/Streamed_Cuda_Solution.dir/rule
 
 # Convenience name for target.
-MAIN_TEST_BENCH_Solution: CMakeFiles/MAIN_TEST_BENCH_Solution.dir/rule
-.PHONY : MAIN_TEST_BENCH_Solution
+Streamed_Cuda_Solution: CMakeFiles/Streamed_Cuda_Solution.dir/rule
+.PHONY : Streamed_Cuda_Solution
 
 # clean rule for target.
-CMakeFiles/MAIN_TEST_BENCH_Solution.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/MAIN_TEST_BENCH_Solution.dir/build.make CMakeFiles/MAIN_TEST_BENCH_Solution.dir/clean
-.PHONY : CMakeFiles/MAIN_TEST_BENCH_Solution.dir/clean
+CMakeFiles/Streamed_Cuda_Solution.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Streamed_Cuda_Solution.dir/build.make CMakeFiles/Streamed_Cuda_Solution.dir/clean
+.PHONY : CMakeFiles/Streamed_Cuda_Solution.dir/clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir
+# Target rules for target CMakeFiles/Optimized_Cuda_Solution.dir
 
 # All Build rule for target.
-CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/build.make CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/build.make CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles --progress-num=1,2 "Built target CUDA_STREAM_TEST_BENCH_Solution"
-.PHONY : CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/all
+CMakeFiles/Optimized_Cuda_Solution.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Optimized_Cuda_Solution.dir/build.make CMakeFiles/Optimized_Cuda_Solution.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Optimized_Cuda_Solution.dir/build.make CMakeFiles/Optimized_Cuda_Solution.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles --progress-num=1,2 "Built target Optimized_Cuda_Solution"
+.PHONY : CMakeFiles/Optimized_Cuda_Solution.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/rule: cmake_check_build_system
+CMakeFiles/Optimized_Cuda_Solution.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/Optimized_Cuda_Solution.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles 0
-.PHONY : CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/rule
+.PHONY : CMakeFiles/Optimized_Cuda_Solution.dir/rule
 
 # Convenience name for target.
-CUDA_STREAM_TEST_BENCH_Solution: CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/rule
-.PHONY : CUDA_STREAM_TEST_BENCH_Solution
+Optimized_Cuda_Solution: CMakeFiles/Optimized_Cuda_Solution.dir/rule
+.PHONY : Optimized_Cuda_Solution
 
 # clean rule for target.
-CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/build.make CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/clean
-.PHONY : CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/clean
+CMakeFiles/Optimized_Cuda_Solution.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Optimized_Cuda_Solution.dir/build.make CMakeFiles/Optimized_Cuda_Solution.dir/clean
+.PHONY : CMakeFiles/Optimized_Cuda_Solution.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/Serial_Fusion_Solution.dir
+
+# All Build rule for target.
+CMakeFiles/Serial_Fusion_Solution.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Serial_Fusion_Solution.dir/build.make CMakeFiles/Serial_Fusion_Solution.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Serial_Fusion_Solution.dir/build.make CMakeFiles/Serial_Fusion_Solution.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles --progress-num=3,4 "Built target Serial_Fusion_Solution"
+.PHONY : CMakeFiles/Serial_Fusion_Solution.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/Serial_Fusion_Solution.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/Serial_Fusion_Solution.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/u13/matthewt1441/ece569/Fusion_Image_Upscale_HPC/build_dir/CMakeFiles 0
+.PHONY : CMakeFiles/Serial_Fusion_Solution.dir/rule
+
+# Convenience name for target.
+Serial_Fusion_Solution: CMakeFiles/Serial_Fusion_Solution.dir/rule
+.PHONY : Serial_Fusion_Solution
+
+# clean rule for target.
+CMakeFiles/Serial_Fusion_Solution.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Serial_Fusion_Solution.dir/build.make CMakeFiles/Serial_Fusion_Solution.dir/clean
+.PHONY : CMakeFiles/Serial_Fusion_Solution.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

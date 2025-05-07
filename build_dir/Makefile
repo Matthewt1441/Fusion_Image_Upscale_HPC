@@ -117,30 +117,43 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named MAIN_TEST_BENCH_Solution
+# Target rules for targets named Streamed_Cuda_Solution
 
 # Build rule for target.
-MAIN_TEST_BENCH_Solution: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 MAIN_TEST_BENCH_Solution
-.PHONY : MAIN_TEST_BENCH_Solution
+Streamed_Cuda_Solution: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Streamed_Cuda_Solution
+.PHONY : Streamed_Cuda_Solution
 
 # fast build rule for target.
-MAIN_TEST_BENCH_Solution/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/MAIN_TEST_BENCH_Solution.dir/build.make CMakeFiles/MAIN_TEST_BENCH_Solution.dir/build
-.PHONY : MAIN_TEST_BENCH_Solution/fast
+Streamed_Cuda_Solution/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Streamed_Cuda_Solution.dir/build.make CMakeFiles/Streamed_Cuda_Solution.dir/build
+.PHONY : Streamed_Cuda_Solution/fast
 
 #=============================================================================
-# Target rules for targets named CUDA_STREAM_TEST_BENCH_Solution
+# Target rules for targets named Optimized_Cuda_Solution
 
 # Build rule for target.
-CUDA_STREAM_TEST_BENCH_Solution: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CUDA_STREAM_TEST_BENCH_Solution
-.PHONY : CUDA_STREAM_TEST_BENCH_Solution
+Optimized_Cuda_Solution: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Optimized_Cuda_Solution
+.PHONY : Optimized_Cuda_Solution
 
 # fast build rule for target.
-CUDA_STREAM_TEST_BENCH_Solution/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/build.make CMakeFiles/CUDA_STREAM_TEST_BENCH_Solution.dir/build
-.PHONY : CUDA_STREAM_TEST_BENCH_Solution/fast
+Optimized_Cuda_Solution/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Optimized_Cuda_Solution.dir/build.make CMakeFiles/Optimized_Cuda_Solution.dir/build
+.PHONY : Optimized_Cuda_Solution/fast
+
+#=============================================================================
+# Target rules for targets named Serial_Fusion_Solution
+
+# Build rule for target.
+Serial_Fusion_Solution: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Serial_Fusion_Solution
+.PHONY : Serial_Fusion_Solution
+
+# fast build rule for target.
+Serial_Fusion_Solution/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Serial_Fusion_Solution.dir/build.make CMakeFiles/Serial_Fusion_Solution.dir/build
+.PHONY : Serial_Fusion_Solution/fast
 
 # Help Target
 help:
@@ -150,8 +163,9 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... CUDA_STREAM_TEST_BENCH_Solution"
-	@echo "... MAIN_TEST_BENCH_Solution"
+	@echo "... Optimized_Cuda_Solution"
+	@echo "... Serial_Fusion_Solution"
+	@echo "... Streamed_Cuda_Solution"
 .PHONY : help
 
 

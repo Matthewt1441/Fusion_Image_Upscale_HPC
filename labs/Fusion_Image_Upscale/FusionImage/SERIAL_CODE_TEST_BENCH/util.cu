@@ -8,6 +8,8 @@
 #include <fstream>
 #include <string>
 
+// RGBA typedef struct
+// Struct used to align RGB images to better optimize global memmory access
 typedef struct __align__(4) { // Or alignas(4) in C++11
     unsigned char r;
     unsigned char g;
@@ -15,10 +17,14 @@ typedef struct __align__(4) { // Or alignas(4) in C++11
     unsigned char a; // Padding to ensure 4-byte alignment
 }RGBA_t;
 
+
+// Function to read PPM image
+// Parameters
+// filename of ppm image to read
+// Pass by reference width to set width of read in image
+// Pass by reference height to set height of read in image
 char* readPPM(char* filename, int* width, int* height) 
 {
-    //std::ifstream file(filename, std::ios::binary);
-
     std::ifstream file(filename, std::ios::binary); // open the file and throw exception if it doesn't exist
     if (file.fail())
         throw "File failed to open";
@@ -44,10 +50,13 @@ char* readPPM(char* filename, int* width, int* height)
     return pixel_data;
 }
 
+// Function to read gray PPM image
+// Parameters
+// filename of ppm image to read
+// Pass by reference width to set width of read in image
+// Pass by reference height to set height of read in image
 char* readPPMGray(char* filename, int* width, int* height) 
 {
-    //std::ifstream file(filename, std::ios::binary);
-
     std::ifstream file(filename, std::ios::binary); // open the file and throw exception if it doesn't exist
     if (file.fail())
         throw "File failed to open";
@@ -73,6 +82,13 @@ char* readPPMGray(char* filename, int* width, int* height)
     return pixel_data;
 }
 
+
+// Function to write PPM image
+// Parameters
+// filename of ppm image to write to
+// pointer to rgb data to write
+// width of output image
+// height of output image
 void writePPM(char* filename, char* img_data, int width, int height)
 {
     std::ofstream file(filename, std::ios::binary);
@@ -86,6 +102,12 @@ void writePPM(char* filename, char* img_data, int width, int height)
     file.write(img_data, size);
 }
 
+// Function to write Gray PPM image
+// Parameters
+// filename of ppm image to write to
+// pointer to rgb data to write
+// width of output image
+// height of output image
 void writePPMGrey(char* filename, char* img_data, int width, int height)
 {
     std::ofstream file(filename, std::ios::binary);
@@ -99,88 +121,39 @@ void writePPMGrey(char* filename, char* img_data, int width, int height)
     file.write(img_data, size);
 }
 
-void Image_Compare(unsigned char* img1, unsigned char* img2, int width, int height)
+#define GREY_CHN    1
+#define RGB_CHN     3
+// Function to compare images
+// Parameters
+// Pointer to "true img" data
+// Pointer to tested img data
+// Number of channesl (GREY) and (RGB)
+// Pointers to width and height integers for the image
+void Image_Compare(unsigned char* true_img, unsigned char* test_img, int chn_count, int width, int height)
 {
     int idx = 0;
-    int y;
-    int x;
-    bool pass = true;
+    int y;  int x;
+
+    // The largest difference that can occur is 255, there are width * height * channel count of pixels
+    float total_pixels = 255.0 * width * height * chn_count;
+    float image_difference = 0;
+
+    // For each pixel in the image
     for( y = 0; y < height; y++) 
     {
         for(x = 0; x < width; x++)
         {
-            idx = y * width + x;
-            char img1_r = img1[idx + 0];
-            char img1_g = img1[idx + 1];
-            char img1_b = img1[idx + 2];
-            char img2_r = img2[idx + 0];
-            char img2_g = img2[idx + 1];
-            char img2_b = img2[idx + 2];
-
-            if((img2_r < img1_r - 5) || (img2_r > img1_r + 5))
-            {
-                pass = false;
-                goto LOOP_EXIT;
-            }
-
-            if((img2_g < img1_g - 5) || (img2_g > img1_g + 5))
-            {
-                pass = false;
-                goto LOOP_EXIT;
-            }
-
-            if((img2_b < img1_b - 5) || (img2_b > img1_b + 5))
-            {
-                pass = false;
-                goto LOOP_EXIT;
-            }
-
-        }
-    }
-
-LOOP_EXIT:
-    if(!pass)
-    {
-        printf("Images do not match at pixel X: %d, Y: %d, Img1 [%d, %d, %d], Img2 [%d, %d, %d]\n", x, y, img1[idx + 0], img1[idx + 1], img1[idx + 2], img2[idx + 0], img2[idx + 1], img2[idx + 2]);
-
-    }
-    else
-    {
-        printf("Images match!\n");
-    }
-
-}
-
-void Grey_Image_Compare(unsigned char* img1, unsigned char* img2, int width, int height)
-{
-    int idx = 0;
-    int y;
-    int x;
-    bool pass = true;
-    for( y = 0; y < height; y++) 
-    {
-        for(x = 0; x < width; x++)
-        {
+            //Calculate the idx
             idx = y * width + x;
 
-            if(img1[idx] < img2[idx] - 5 || img1[idx] > img2[idx] + 5 )
+            //for each of the channels
+            for (int i = 0; i < chn_count; i++)
             {
-                pass = false;
-                goto GREY_LOOP_EXIT;
+                //calculate the error of the image
+                image_difference += (float)abs((true_img[idx + i] - test_img[idx + i]));
             }
-
-
         }
     }
-
-GREY_LOOP_EXIT:
-    if(!pass)
-    {
-        printf("Images do not match at pixel X: %d, Y: %d, Img1 [%d, %d, %d], Img2 [%d, %d, %d]\n", x, y, img1[idx + 0], img1[idx + 1], img1[idx + 2], img2[idx + 0], img2[idx + 1], img2[idx + 2]);
-
-    }
-    else
-    {
-        printf("Images match!\n");
-    }
+    
+    printf("Accuracy: %f%\n", 100 - (100 * image_difference/total_pixels));
 }

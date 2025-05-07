@@ -1,0 +1,1 @@
+/bin/c++  -Wall -Wno-unused-function -Wno-unused-parameter -Wextra -std=c++11 -O3 -DNDEBUG -rdynamic CMakeFiles/Optimized_Cuda_Solution.dir/Fusion_Image_Upscale/FusionImage/OPTIMIZED_CUDA_TEST_BENCH/Optimized_Cuda_Solution_generated_solution.cu.o -o Optimized_Cuda_Solution  /opt/ohpc/pub/apps/cuda/11.0/lib64/libcudart_static.a -ldl -lrt -lpthread -lm -lrt -lpthread 
